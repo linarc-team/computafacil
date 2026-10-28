@@ -16,7 +16,7 @@ const records: ProductGroup[] = [
   ['Monitores', ['AOC 24G4 Gamer 23.8” IPS 180Hz','LG UltraGear 27GR75Q-B 27” QHD 165Hz','Samsung ViewFinity S5 34” UltraWide','ASUS TUF Gaming VG27UQ1A 27” 4K UHD 160Hz','AOC C32G2E Curvo 31.5” 165Hz','Lenovo ThinkVision M15 Portátil 15.6”','LG UltraGear 25GR75FG-B 24.5” 360Hz'], [799,1399,1199,1999,2099,799,1599], 'photo-1527443224154-c4a3942d3acf', 'Imagem fluida, cores vivas e acabamento premium.'],
   ['Processadores', ['AMD Ryzen 5 5600','AMD Ryzen 5 7600','AMD Ryzen 7 5700X','AMD Ryzen 7 7800X3D','AMD Ryzen 9 7900X','AMD Ryzen 9 7950X','Intel Core i5-12400F','Intel Core i5-14600K','Intel Core i7-14700K','Intel Core i9-14900K','Intel Core Ultra 5 245K','Intel Core Ultra 7 265K'], [499,799,729,1899,1799,2699,559,1249,1799,2399,1399,1999], 'photo-1676315487591-7a1d5c02ecae', 'Potência e eficiência para sua próxima montagem.'],
   ['Memória RAM', ['Kingston Fury Beast DDR4 16GB 3200MHz','Kingston Fury Beast DDR4 32GB 3200MHz','Kingston Fury Beast DDR5 32GB 6000MHz','Corsair Vengeance DDR5 32GB 6000MHz','XPG Lancer RGB DDR5 32GB 6000MHz'], [179,299,499,579,599], 'photo-1562976540-1502c2145186', 'Mais velocidade para multitarefas e jogos.'],
-  ['Periféricos', ['Logitech M90 — Mouse USB com fio','Multilaser TC193 — Teclado USB ABNT2','Philips TAUE101BK — Fone com fio e microfone','Logitech G Pro X TKL LIGHTSPEED — Teclado','Razer DeathAdder V3 Pro — Mouse','HyperX Cloud III — Headset','SteelSeries QcK Edge XL — Mousepad','Logitech Brio 500 — Webcam','FIFINE AM8 — Microfone USB','8BitDo Ultimate C — Controle sem fio','JBL Quantum Duo — Caixa de som','Logitech Pebble Keys 2 K380s — Teclado','Logitech MX Master 3S — Mouse sem fio','Razer BlackShark V2 Pro — Headset','Elgato Wave:3 — Microfone Gamer','Logitech G Pro X Superlight 2 — Mouse','Redragon K617 Fizz — Teclado 60%','HyperX Pulsefire Mat XL — Mousepad','North Bayou H100 — Suporte articulado','Anker 565 Docking Station — Dock USB-C'], [30,30,39,299,279,399,99,219,319,259,129,169,399,499,499,449,199,119,179,349], 'photo-1636489910753-1880d26bf218', 'Periféricos de marcas reconhecidas para completar seu setup.'],
+  ['Periféricos', ['Logitech M90 — Mouse USB com fio','Multilaser TC193 — Teclado USB ABNT2','Philips TAUE101BK — Fone com fio e microfone','Logitech G Pro X TKL LIGHTSPEED — Teclado','Razer DeathAdder V3 Pro — Mouse','HyperX Cloud III — Headset','SteelSeries QcK Edge XL — Mousepad','Logitech Brio 500 — Webcam','FIFINE AM8 — Microfone USB','8BitDo Ultimate C — Controle sem fio','JBL Quantum Duo — Caixa de som','Logitech Pebble Keys 2 K380s — Teclado','Logitech MX Master 3S — Mouse sem fio','Razer BlackShark V2 Pro — Headset','Elgato Wave:3 — Microfone Gamer','Logitech G Pro X Superlight 2 — Mouse','Redragon K617 Fizz — Teclado 60%','HyperX Pulsefire Mat XL — Mousepad','North Bayou H100 — Suporte articulado','Anker 565 Docking Station — Dock USB-C','Dazz Quartum — Controle USB para PC/PS3/PS4','Dell MS116 — Mouse USB com fio','C3Tech KB-M11BK — Teclado USB ABNT2','Fortrek Speed MPG101 — Mousepad','JBL C50HI — Fone com fio e microfone'], [30,30,39,299,279,399,99,219,319,259,129,169,399,499,499,449,199,119,179,349,69,39,29,25,65], 'photo-1636489910753-1880d26bf218', 'Periféricos de marcas reconhecidas para completar seu setup.'],
 ];
 const iconForBrand: Record<string, string> = {
   NVIDIA: 'nvidia', PNY: 'pny', AMD: 'amd', Intel: 'intel', AOC: 'aoc', LG: 'lg', Samsung: 'samsung', ASUS: 'asus', Lenovo: 'lenovo',
@@ -76,11 +76,23 @@ const productImages: Record<string, string> = {
   'HyperX Pulsefire Mat XL — Mousepad': '/products/hyperx-pulsefire-mat-xl-mousepad.webp',
   'North Bayou H100 — Suporte articulado': '/products/north-bayou-h100-suporte-articulado.webp',
   'Anker 565 Docking Station — Dock USB-C': '/products/anker-565-docking-station-dock-usb-c.webp',
+  'Dazz Quartum — Controle USB para PC/PS3/PS4': '/products/dazz-quartum-controle-usb-para-pc-ps3-ps4.webp',
+  'Dell MS116 — Mouse USB com fio': '/products/dell-ms116-mouse-usb-com-fio.webp',
+  'C3Tech KB-M11BK — Teclado USB ABNT2': '/products/c3tech-kb-m11bk-teclado-usb-abnt2.webp',
+  'Fortrek Speed MPG101 — Mousepad': '/products/fortrek-speed-mpg101-mousepad.webp',
+  'JBL C50HI — Fone com fio e microfone': '/products/jbl-c50hi-fone-com-fio-e-microfone.webp',
+};
+const productDetails: Record<string, string> = {
+  'Dazz Quartum — Controle USB para PC/PS3/PS4': 'Controle com fio USB para PC, PS3 e PS4. Importante: este modelo não é um controle de PS5 e não deve ser anunciado como compatível com jogos nativos de PS5. Um DualSense compatível com PS5 não cabe no limite de R$ 70.',
 };
 function brandFor(name: string, category: Category): string {
   if (category === 'Placas de vídeo') return name.startsWith('PNY') ? 'PNY' : name.startsWith('ASUS') ? 'ASUS' : name.startsWith('AMD') ? 'AMD' : 'NVIDIA';
   if (category === 'Processadores') return name.startsWith('AMD') ? 'AMD' : 'Intel';
   if (category === 'Armazenamento') return name.startsWith('WD Blue') ? 'Western Digital' : name.startsWith('Seagate') ? 'Seagate' : 'Kingston';
+  if (name.startsWith('Dazz')) return 'Dazz';
+  if (name.startsWith('Dell')) return 'Dell';
+  if (name.startsWith('C3Tech')) return 'C3Tech';
+  if (name.startsWith('Fortrek')) return 'Fortrek';
   return Object.keys(iconForBrand).find((brand) => name.startsWith(brand)) ?? 'ComputaFacil';
 }
 const regularProducts: Product[] = records.flatMap(([category, names, prices, image, detail]) => names.map((name, i) => {
@@ -89,7 +101,7 @@ const regularProducts: Product[] = records.flatMap(([category, names, prices, im
   return {
     id: `${category.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${i + 1}`,
     name, brand, brandIcon: iconForBrand[brand] ?? 'cpu', category, price: category === 'Placas de vídeo' ? Math.round(prices[i] * 0.95) : prices[i], oldPrice,
-    image: productImages[name] ?? photo(image, 800), detail,
+    image: productImages[name] ?? photo(image, 800), detail: productDetails[name] ?? detail,
     ...(i === 2 && category === 'Placas de vídeo' ? { badge: 'Oferta' } : {}),
     rating: '',
   };

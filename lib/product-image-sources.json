@@ -268,5 +268,30 @@
     "name": "AMD Ryzen 9 7900X",
     "url": "https://pcinq.com/wp-content/uploads/2023/03/AMD_Ryzen-9-7900X_Boxed.webp",
     "file": "/products/amd-ryzen-9-7900x.webp"
+  },
+  {
+    "name": "C3Tech KB-M11BK — Teclado USB ABNT2",
+    "url": "https://images.tcdn.com.br/img/img_prod/1361945/teclado_usb_c3tech_kb_m11bk_multimdia_preto_1_20260617104559_a3ed850c527c.jpg",
+    "file": "/products/c3tech-kb-m11bk-teclado-usb-abnt2.webp"
+  },
+  {
+    "name": "Dazz Quartum — Controle USB para PC/PS3/PS4",
+    "url": "https://cdn.awsli.com.br/2500x2500/2547/2547358/produto/357548696/controle-pc-ps3-e-ps4-com-fio-usb-dazz-quartum-ra7f8sxyqg.jpg",
+    "file": "/products/dazz-quartum-controle-usb-para-pc-ps3-ps4.webp"
+  },
+  {
+    "name": "Dell MS116 — Mouse USB com fio",
+    "url": "https://snpi.dell.com/snp/images/products/large/en-ca~275-BBCF/275-BBCF.jpg",
+    "file": "/products/dell-ms116-mouse-usb-com-fio.webp"
+  },
+  {
+    "name": "Fortrek Speed MPG101 — Mousepad",
+    "url": "https://img.terabyteshop.com.br/produto/g/mousepad-gamer-fortrek-speed-mpg101-pt-medio-320x240mm-preto_225630.jpg",
+    "file": "/products/fortrek-speed-mpg101-mousepad.webp"
+  },
+  {
+    "name": "JBL C50HI — Fone com fio e microfone",
+    "url": "https://images.kabum.com.br/produtos/fotos/sync_mirakl/128140/xlarge/Fone-De-Ouvido-JBL-C50HI-Intra-Auricular-Com-Microfone-Preto_1769788437.jpg",
+    "file": "/products/jbl-c50hi-fone-com-fio-e-microfone.webp"
   }
 ]
