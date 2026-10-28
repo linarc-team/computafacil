@@ -7,15 +7,6 @@ export const runtime = 'nodejs';
 const digits = (value: unknown) => String(value ?? '').replace(/\D/g, '');
 const text = (value: unknown, maxLength = 200) => typeof value === 'string' ? value.trim().slice(0, maxLength) : '';
 const MAX_REQUEST_BYTES = 32_768;
-function isValidCpf(value: string) {
-  if (!/^\d{11}$/.test(value) || /^([0-9])\1{10}$/.test(value)) return false;
-  const digit = (length: number) => {
-    const sum = value.slice(0, length).split('').reduce((total, n, i) => total + Number(n) * (length + 1 - i), 0);
-    const result = (sum * 10) % 11;
-    return result === 10 ? 0 : result;
-  };
-  return digit(9) === Number(value[9]) && digit(10) === Number(value[10]);
-}
 async function readLimitedJson(request: NextRequest) {
   const declaredLength = Number(request.headers.get('content-length') || 0);
   if (declaredLength > MAX_REQUEST_BYTES) throw new Error('REQUEST_TOO_LARGE');
@@ -60,6 +51,7 @@ export async function POST(request: NextRequest) {
   }
   const apiKey = process.env.BLACKCAT_API_KEY;
   if (!apiKey) return NextResponse.json({ error: 'O gateway de pagamento ainda não foi ativado. Configure BLACKCAT_API_KEY na Vercel.' }, { status: 503 });
+  if (!process.env.DATABASE_URL) return NextResponse.json({ error: 'O banco de pedidos não está conectado. Configure DATABASE_URL na Vercel para habilitar o PIX.' }, { status: 503 });
   try {
     const body = await readLimitedJson(request);
     const { customer = {}, address = {}, paymentMethod, cart = [] } = body;
@@ -67,8 +59,6 @@ export async function POST(request: NextRequest) {
     const customerEmail = text(customer.email, 254).toLowerCase();
     const customerPhone = digits(customer.phone);
     const customerCpf = digits(customer.cpf);
-    if (!customerName || !/^\S+@\S+\.\S+$/.test(customerEmail) || customerPhone.length < 10 || customerPhone.length > 13 || !isValidCpf(customerCpf))
-      return NextResponse.json({ error: 'Confira nome, e-mail, telefone e CPF.' }, { status: 400 });
     const street = text(address.street, 120);
     const number = text(address.number, 20);
     const complement = text(address.complement, 100);
@@ -76,8 +66,6 @@ export async function POST(request: NextRequest) {
     const city = text(address.city, 80);
     const state = text(address.state, 2).toUpperCase();
     const zipCode = digits(address.zipCode);
-    if (!street || !number || !neighborhood || !city || !/^[A-Z]{2}$/.test(state) || zipCode.length !== 8)
-      return NextResponse.json({ error: 'Preencha um endereço de entrega completo.' }, { status: 400 });
     if (!Array.isArray(cart) || !cart.length || cart.length > 50) return NextResponse.json({ error: 'Carrinho inválido.' }, { status: 400 });
     const items = cart.map((entry: { id?: string; quantity?: number; variantSize?: string }) => {
       const item = products.find((product) => product.id === entry.id);
@@ -104,7 +92,9 @@ export async function POST(request: NextRequest) {
     payload.pix = { expiresInDays: 1 };
     try {
       await createOrderRecord({ id: crypto.randomUUID(), externalRef, userId, customerName: customerData.name, email: customerData.email, phone: customerData.phone, shipping: shippingData, items, amountCents: total, paymentMethod: method });
-    } catch {
+    } catch (error) {
+      const dbError = error as { name?: string; code?: string };
+      console.error('[checkout] order persistence failed', { name: dbError?.name, code: dbError?.code });
       return NextResponse.json({ error: 'Não foi possível registrar seu pedido com segurança. Tente novamente.' }, { status: 503 });
     }
     let response: Response;

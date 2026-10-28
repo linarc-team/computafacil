@@ -22,10 +22,18 @@ const iconForBrand: Record<string, string> = {
   NVIDIA: 'nvidia', PNY: 'pny', AMD: 'amd', Intel: 'intel', AOC: 'aoc', LG: 'lg', Samsung: 'samsung', ASUS: 'asus', Lenovo: 'lenovo',
   Kingston: 'kingstontechnology', Corsair: 'corsair', XPG: 'xpg', Logitech: 'logitech', Razer: 'razer', HyperX: 'hyperx', Multi: 'multi', Philips: 'philips',
   SteelSeries: 'steelseries', FIFINE: 'fifine', '8BitDo': '8bitdo', JBL: 'jbl', Anker: 'anker', Elgato: 'elgato', Redragon: 'redragon', Govee: 'govee', 'North Bayou': 'northbayou',
-  'Western Digital': 'western-digital', Seagate: 'seagate',
+  'Western Digital': 'western-digital', Seagate: 'seagate', 'T-Dagger': 'tdagger',
 };
 // Imagens individuais dos modelos identificados (fontes de produto, não fotos genéricas de categoria).
 const productImages: Record<string, string> = {
+  'ASUS Phoenix Radeon RX 550 2GB': 'https://image.coolblue.nl/500x500/products/809862',
+  'AOC LED 19.5” 75Hz': photo('photo-1527443224154-c4a3942d3acf', 800),
+  'Kingston ValueRAM DDR3 8GB 1600MHz': photo('photo-1562976540-1502c2145186', 800),
+  'Kingston Fury Beast DDR4 8GB 3200MHz': '/products/kingston-fury-beast-ddr4-16gb-3200mhz.webp',
+  'Redragon Centrophorus 2 M601-RGB — Mouse gamer': 'https://static.wixstatic.com/media/71a6c2_7f4035495a7e499e99d5d210a40b733f~mv2.png/v1/fill/w_504%2Ch_322%2Cal_c%2Cq_85%2Cenc_avif%2Cquality_auto/1.png',
+  'T-Dagger Teclado Gamer RGB ABNT2': 'https://static.wixstatic.com/media/71a6c2_17967830f2ba483eb20e6efd71f37761~mv2.png/v1/fill/w_396%2Ch_388%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/TAURUS%202.png',
+  'Redragon Flick P016 — Mousepad estampado': 'https://down-id.img.susercontent.com/file/sg-11134201-7rfh6-m9e5jruta1jtf6',
+  'Redragon Ares H120 — Headset gamer': 'https://bluearm.ph/cdn/shop/products/Ares-H120-1.jpg?v=1636091396',
   'PNY GeForce RTX 4060 Verto Dual Fan 8GB': '/products/pny-geforce-rtx-4060-verto-dual-fan-8gb.webp',
   'ASUS Dual GeForce RTX 4060 Ti OC 8GB': '/products/asus-dual-geforce-rtx-4060-ti-oc-8gb.webp',
   'ASUS Dual GeForce RTX 4070 SUPER EVO 12GB': '/products/asus-dual-geforce-rtx-4070-super-evo-12gb.webp',
@@ -114,8 +122,18 @@ const storageProducts: Product[] = [
   { id: 'storage-kingston-a400-ssd', name: 'Kingston A400 2.5” SATA SSD (120 GB–960 GB)', brand: 'Kingston', brandIcon: 'kingstontechnology', category: 'Armazenamento', price: 79, oldPrice: 79, image: '/products/kingston-a400-2-5-sata-ssd-120-gb-960-gb.webp', detail: 'SSD SATA de 2,5 polegadas para desktop e notebook.', rating: '', variants: [{ size: '120 GB', price: 79 }, { size: '240 GB', price: 109 }, { size: '480 GB', price: 179 }, { size: '960 GB', price: 299 }] },
   { id: 'storage-wd-sn580-ssd', name: 'WD Blue SN580 M.2 NVMe SSD (250 GB–1 TB)', brand: 'Western Digital', brandIcon: 'western-digital', category: 'Armazenamento', price: 139, oldPrice: 139, image: '/products/wd-blue-sn580-m-2-nvme-ssd-250-gb-1-tb.webp', detail: 'SSD NVMe M.2 2280 PCIe 4.0.', rating: '', variants: [{ size: '250 GB', price: 139 }, { size: '500 GB', price: 219 }, { size: '1 TB', price: 369 }] },
 ];
+const budgetAndPromoProducts: Product[] = [
+  { id: 'rx550-promotion', name: 'ASUS Phoenix Radeon RX 550 2GB', brand: 'ASUS', brandIcon: 'asus', category: 'Placas de vídeo', price: 229.90, oldPrice: 279.90, image: productImages['ASUS Phoenix Radeon RX 550 2GB'], badge: 'Oferta', detail: 'Placa de vídeo de entrada para jogos leves, e-sports e vídeo. Promoção por menos de R$ 250.', rating: '' },
+  { id: 'monitor-199-promo', name: 'AOC LED 19.5” 75Hz', brand: 'AOC', brandIcon: 'aoc', category: 'Monitores', price: 199.90, oldPrice: 279.90, image: productImages['AOC LED 19.5” 75Hz'], badge: 'Só por 3 dias', detail: 'Monitor compacto para estudo, trabalho e setup gamer de entrada. Oferta especial válida por apenas 3 dias.', rating: '' },
+  { id: 'ram-ddr3-8gb-promo', name: 'Kingston ValueRAM DDR3 8GB 1600MHz', brand: 'Kingston', brandIcon: 'kingstontechnology', category: 'Memória RAM', price: 89.90, oldPrice: 119.90, image: productImages['Kingston ValueRAM DDR3 8GB 1600MHz'], badge: 'Oferta', detail: 'Módulo DDR3 de 8GB para computadores compatíveis com memória DDR3.', rating: '' },
+  { id: 'ram-ddr4-8gb-promo', name: 'Kingston Fury Beast DDR4 8GB 3200MHz', brand: 'Kingston', brandIcon: 'kingstontechnology', category: 'Memória RAM', price: 89.90, oldPrice: 129.90, image: productImages['Kingston Fury Beast DDR4 8GB 3200MHz'], badge: 'Oferta', detail: 'Módulo DDR4 de 8GB para computadores compatíveis com memória DDR4.', rating: '' },
+  { id: 'mouse-rgb-under-50', name: 'Redragon Centrophorus 2 M601-RGB — Mouse gamer', brand: 'Redragon', brandIcon: 'redragon', category: 'Periféricos', price: 49.90, oldPrice: 69.90, image: productImages['Redragon Centrophorus 2 M601-RGB — Mouse gamer'], badge: 'Até R$ 50', detail: 'Mouse gamer com iluminação RGB, formato ergonômico e conexão USB.', rating: '' },
+  { id: 'keyboard-rgb-under-50', name: 'T-Dagger Teclado Gamer RGB ABNT2', brand: 'T-Dagger', brandIcon: 'tdagger', category: 'Periféricos', price: 49.90, oldPrice: 69.90, image: productImages['T-Dagger Teclado Gamer RGB ABNT2'], badge: 'Até R$ 50', detail: 'Teclado gamer ABNT2 com iluminação RGB e conexão USB.', rating: '' },
+  { id: 'mousepad-pattern-under-50', name: 'Redragon Flick P016 — Mousepad estampado', brand: 'Redragon', brandIcon: 'redragon', category: 'Periféricos', price: 29.90, oldPrice: 39.90, image: productImages['Redragon Flick P016 — Mousepad estampado'], badge: 'Até R$ 50', detail: 'Mousepad com estampa gamer, superfície de tecido e base antiderrapante.', rating: '' },
+  { id: 'headset-under-50', name: 'Redragon Ares H120 — Headset gamer', brand: 'Redragon', brandIcon: 'redragon', category: 'Periféricos', price: 49.90, oldPrice: 69.90, image: productImages['Redragon Ares H120 — Headset gamer'], badge: 'Até R$ 50', detail: 'Headset com microfone integrado para jogos, chamadas e uso diário.', rating: '' },
+];
 const categoryOrder = categories.map(({ name }) => name);
-export const products: Product[] = [...regularProducts, ...storageProducts].sort((a, b) => {
+export const products: Product[] = [...regularProducts, ...storageProducts, ...budgetAndPromoProducts].sort((a, b) => {
   const groupOrder = categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
   if (groupOrder !== 0) return groupOrder;
   const priceA = Math.min(a.price, ...(a.variants?.map(({ price }) => price) ?? []));
