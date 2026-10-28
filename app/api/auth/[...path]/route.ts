@@ -4,12 +4,21 @@ import { getAuth } from '@/lib/auth/server';
 type AuthMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 type AuthContext = { params: Promise<{ path: string[] }> };
 async function handle(request: Request, context: AuthContext, method: AuthMethod) {
+  const hasBaseUrl = Boolean(process.env.NEON_AUTH_BASE_URL);
+  const hasCookieSecret = Boolean(process.env.NEON_AUTH_COOKIE_SECRET);
+  const headers = { 'Cache-Control': 'no-store, max-age=0' };
+  if (!hasBaseUrl || !hasCookieSecret) {
+    console.error('Auth is unavailable: missing server configuration', { hasBaseUrl, hasCookieSecret });
+    return NextResponse.json({ error: 'O cadastro está temporariamente indisponível. Tente novamente mais tarde.' }, { status: 503, headers });
+  }
   try {
     const handlers = getAuth().handler();
     return await handlers[method](request, context);
   } catch (error) {
-    console.error('Neon Auth request failed:', error instanceof Error ? error.message : 'unknown error');
-    return NextResponse.json({ error: 'O sistema de contas ainda não está configurado. Tente novamente mais tarde.' }, { status: 503 });
+    const status = error && typeof error === 'object' && 'status' in error ? Number(error.status) : 0;
+    const name = error instanceof Error ? error.name : 'UnknownError';
+    console.error('Auth handler failed', { name, upstreamStatus: Number.isInteger(status) ? status : 0 });
+    return NextResponse.json({ error: 'O serviço de contas está indisponível. Tente novamente em instantes.' }, { status: 503, headers });
   }
 }
 export const GET = (request: Request, context: AuthContext) => handle(request, context, 'GET');

@@ -22,9 +22,11 @@ export async function ensureOrdersTable() {
     payment_method text NOT NULL,
     payment_status text NOT NULL DEFAULT 'PENDING',
     invoice_url text,
+    tracking_code text,
     created_at timestamptz NOT NULL DEFAULT now(),
     updated_at timestamptz NOT NULL DEFAULT now()
   )`;
+  await sql`ALTER TABLE computafacil_orders ADD COLUMN IF NOT EXISTS tracking_code text`;
   await sql`CREATE INDEX IF NOT EXISTS computafacil_orders_user_created_idx ON computafacil_orders (user_id, created_at DESC)`;
   return sql;
 }
@@ -60,4 +62,45 @@ export async function orderBelongsToUser(transactionId: string, userId: string) 
   const sql = await ensureOrdersTable();
   const rows = await sql`SELECT transaction_id FROM computafacil_orders WHERE transaction_id=${transactionId} AND user_id=${userId} LIMIT 1`;
   return rows.length > 0;
+}
+
+export async function getOwnedOrder(transactionId: string, userId: string) {
+  const sql = await ensureOrdersTable();
+  const rows = await sql`SELECT external_ref, transaction_id, user_id, customer_name, customer_email, customer_phone, shipping, items, amount_cents, payment_method, payment_status, tracking_code, created_at FROM computafacil_orders WHERE transaction_id=${transactionId} AND user_id=${userId} LIMIT 1`;
+  return rows[0] ?? null;
+}
+
+export async function getOrderTracking(transactionId: string, userId: string) {
+  const order = await getOwnedOrder(transactionId, userId);
+  if (!order || order.payment_status !== 'PAID') return null;
+  return { status: order.tracking_code ? 'IN_TRANSIT' : 'PREPARING', trackingCode: order.tracking_code ?? null };
+}
+
+export async function ensureSupportTable() {
+  const sql = getSql();
+  await sql`CREATE TABLE IF NOT EXISTS computafacil_support_conversations (
+    id text PRIMARY KEY,
+    token_hash text UNIQUE NOT NULL,
+    thread_id text UNIQUE NOT NULL,
+    created_at timestamptz NOT NULL DEFAULT now(),
+    last_message_at timestamptz NOT NULL DEFAULT now()
+  )`;
+  return sql;
+}
+
+export async function createSupportConversation(id: string, tokenHash: string, threadId: string) {
+  const sql = await ensureSupportTable();
+  await sql`INSERT INTO computafacil_support_conversations (id, token_hash, thread_id) VALUES (${id}, ${tokenHash}, ${threadId})`;
+}
+
+export async function getSupportConversation(tokenHash: string) {
+  const sql = await ensureSupportTable();
+  const rows = await sql`SELECT id, thread_id, last_message_at FROM computafacil_support_conversations WHERE token_hash=${tokenHash} AND created_at > now() - interval '30 days' LIMIT 1`;
+  return rows[0] ?? null;
+}
+
+export async function reserveSupportMessage(tokenHash: string) {
+  const sql = await ensureSupportTable();
+  const rows = await sql`UPDATE computafacil_support_conversations SET last_message_at=now() WHERE token_hash=${tokenHash} AND last_message_at < now() - interval '1 second' RETURNING thread_id`;
+  return rows[0]?.thread_id as string | undefined;
 }
