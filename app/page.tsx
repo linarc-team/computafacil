@@ -23,6 +23,9 @@ function AccountDialog({ close, onAuthenticated, initialMode = 'signin', checkou
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [couponInput, setCouponInput] = useState('');
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponMessage, setCouponMessage] = useState('');
   async function submit(event: React.FormEvent) {
     event.preventDefault(); setBusy(true); setError('');
     try {
@@ -66,6 +69,10 @@ function Checkout({ cart, total, close, clear }: { cart: CartItem[]; total: numb
   const [invoiceUrl, setInvoiceUrl] = useState('');
   const [tracking, setTracking] = useState<{status:string;trackingCode:string|null}|null>(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '', cpf: '', zipCode: '', street: '', number: '', complement: '', neighborhood: '', city: '', state: '' });
+  const checkoutTotal = couponApplied
+    ? cart.reduce((sum, item) => sum + Math.round(Math.round(item.product.price * 100) * 0.7) * item.quantity, 0) / 100
+    : total;
+  const couponDiscount = total - checkoutTotal;
   const set = (key: keyof typeof form, value: string) => setForm((old) => ({ ...old, [key]: value }));
   const fillCep = async () => {
     const cep = form.zipCode.replace(/\D/g, '');
@@ -75,7 +82,7 @@ function Checkout({ cart, total, close, clear }: { cart: CartItem[]; total: numb
   async function submit(event: React.FormEvent) {
     event.preventDefault(); setBusy(true); setError('');
     try {
-      const response = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ customer: form, address: form, paymentMethod: 'pix', cart: cart.map(({ product, quantity }) => ({ id: product.baseProductId ?? product.id, variantSize: product.selectedVariant, quantity })) }) });
+      const response = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ customer: form, address: form, paymentMethod: 'pix', coupon: couponApplied ? 'COMPUTA' : undefined, cart: cart.map(({ product, quantity }) => ({ id: product.baseProductId ?? product.id, variantSize: product.selectedVariant, quantity })) }) });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Não foi possível iniciar o pagamento.');
       setPayment(result.data);
@@ -154,12 +161,13 @@ function Checkout({ cart, total, close, clear }: { cart: CartItem[]; total: numb
       <p className="small-note">Pedido {payment.transactionId} · {paid ? 'Confirmado pela ComputaFacil' : 'Aguardando confirmação'}</p>
       <button className="text-button" onClick={close}>Voltar para a loja</button>
     </div> : <form noValidate onSubmit={submit} className="checkout-body">
-      <div className="checkout-summary"><div><ShoppingBag size={17}/><strong>{cart.reduce((sum, item) => sum + item.quantity, 0)} itens</strong><span>Frete grátis até {date}</span></div><strong>{money(total)}</strong></div>
+      <div className="checkout-summary"><div><ShoppingBag size={17}/><strong>{cart.reduce((sum, item) => sum + item.quantity, 0)} itens</strong><span>Frete grátis até {date}</span></div><strong>{money(checkoutTotal)}</strong></div>
+      <div className="form-section coupon-section"><h3>Cupom de desconto</h3><div className="coupon-entry"><input aria-label="Cupom de desconto" value={couponInput} onChange={(event)=>{setCouponInput(event.target.value);setCouponApplied(false);setCouponMessage('');}} placeholder="Digite seu cupom"/><button type="button" className="button button-outline" onClick={()=>{if(couponInput.trim().toUpperCase()==='COMPUTA'){setCouponApplied(true);setCouponMessage('Cupom COMPUTA aplicado: 30% de desconto.');}else{setCouponApplied(false);setCouponMessage('Cupom inválido.');}}}>Aplicar</button></div>{couponMessage&&<p className={`coupon-message ${couponApplied?'coupon-success':''}`} role="status">{couponMessage}</p>}{couponApplied&&<div className="coupon-totals"><span>Subtotal <strong>{money(total)}</strong></span><span>Desconto COMPUTA (30%) <strong>−{money(couponDiscount)}</strong></span><span>Total com desconto <strong>{money(checkoutTotal)}</strong></span></div>}</div>
       <div className="form-section"><h3>Seus dados</h3><div className="form-grid"><label className="span-2">Nome completo<input required autoComplete="name" value={form.name} onChange={(e)=>set('name',e.target.value)} placeholder="Como aparece no documento"/></label><label>E-mail<input required type="email" autoComplete="email" value={form.email} onChange={(e)=>set('email',e.target.value)} placeholder="voce@email.com"/></label><label>Telefone / WhatsApp<input required type="tel" autoComplete="tel" value={form.phone} onChange={(e)=>set('phone',e.target.value)} placeholder="(11) 99999-9999"/></label><label className="span-2">CPF<input required inputMode="numeric" value={form.cpf} onChange={(e)=>set('cpf',e.target.value)} placeholder="000.000.000-00" maxLength={14}/></label></div></div>
       <div className="form-section"><div className="form-title-row"><h3>Endereço de entrega</h3><span><Truck size={14}/> Até 14 dias úteis</span></div><div className="form-grid"><label>CEP<div className="cep-field"><input required inputMode="numeric" autoComplete="postal-code" value={form.zipCode} onChange={(e)=>set('zipCode',e.target.value)} onBlur={fillCep} placeholder="00000-000"/><a href="https://buscacepinter.correios.com.br/app/endereco/index.php" target="_blank" rel="noreferrer">Não sei</a></div></label><label>Estado (UF)<input required autoComplete="address-level1" value={form.state} onChange={(e)=>set('state',e.target.value.toUpperCase().slice(0,2))} placeholder="SP" maxLength={2}/></label><label className="span-2">Rua / Avenida<input required autoComplete="street-address" value={form.street} onChange={(e)=>set('street',e.target.value)} placeholder="Logradouro"/></label><label>Número<input required value={form.number} onChange={(e)=>set('number',e.target.value)} placeholder="123"/></label><label>Complemento<input value={form.complement} onChange={(e)=>set('complement',e.target.value)} placeholder="Apto, bloco (opcional)"/></label><label>Bairro<input required value={form.neighborhood} onChange={(e)=>set('neighborhood',e.target.value)} placeholder="Seu bairro"/></label><label>Cidade<input required autoComplete="address-level2" value={form.city} onChange={(e)=>set('city',e.target.value)} placeholder="Sua cidade"/></label></div></div>
       <div className="form-section"><h3>Forma de pagamento</h3><div className="payment-option selected pix-only-option"><span className="payment-mark pix-mark">◇</span><span><strong>PIX</strong><small>Pagamento instantâneo com QR Code</small></span><Check size={16}/></div></div>
       {error&&<div className="form-error" role="alert">{error}</div>}
-      <button className="button button-red submit-order" disabled={busy}>{busy?<><span className="spinner"/>Preparando pagamento…</>:<>Pagar {money(total)} <ArrowRight size={18}/></>}</button>
+      <button className="button button-red submit-order" disabled={busy}>{busy?<><span className="spinner"/>Preparando pagamento…</>:<>Pagar {money(checkoutTotal)} <ArrowRight size={18}/></>}</button>
       <p className="secure-note"><ShieldCheck size={15}/> Seus dados são protegidos pela ComputaFacil durante o pagamento.</p>
     </form>}
   </section></div>;

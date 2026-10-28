@@ -55,6 +55,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await readLimitedJson(request);
     const { customer = {}, address = {}, paymentMethod, cart = [] } = body;
+    const coupon = typeof body.coupon === 'string' ? body.coupon.trim().toUpperCase() : '';
+    if (coupon && coupon !== 'COMPUTA') return NextResponse.json({ error: 'Cupom inválido.' }, { status: 400 });
     const customerName = text(customer.name, 120);
     const customerEmail = text(customer.email, 254).toLowerCase();
     const customerPhone = digits(customer.phone);
@@ -74,7 +76,9 @@ export async function POST(request: NextRequest) {
       const variant = entry.variantSize ? item.variants?.find((option) => option.size === entry.variantSize) : undefined;
       if (entry.variantSize && !variant) throw new Error('Capacidade de armazenamento inválida.');
       if (item.variants?.length && !variant) throw new Error('Selecione a capacidade do produto.');
-      return { id: variant ? `${item.id}-${variant.size.toLowerCase().replace(/\s+/g, '')}` : item.id, title: variant ? `${item.name} ${variant.size}` : item.name, unitPrice: (variant?.price ?? item.price) * 100, quantity, tangible: true };
+      const baseUnitPriceCents = Math.round((variant?.price ?? item.price) * 100);
+      const unitPrice = coupon === 'COMPUTA' ? Math.round(baseUnitPriceCents * 0.7) : baseUnitPriceCents;
+      return { id: variant ? `${item.id}-${variant.size.toLowerCase().replace(/\s+/g, '')}` : item.id, title: variant ? `${item.name} ${variant.size}` : item.name, unitPrice, quantity, tangible: true };
     });
     const total = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
     if (paymentMethod !== 'pix') return NextResponse.json({ error: 'No momento, aceitamos somente PIX.' }, { status: 400 });
