@@ -165,65 +165,6 @@ function Checkout({ cart, total, close, clear }: { cart: CartItem[]; total: numb
   </section></div>;
 }
 
-type ChatMessage = { id: string; content: string; sender: 'customer'|'team'|'system'; createdAt: string };
-function SupportChat({ close }: { close: () => void }) {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [draft, setDraft] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
-  const [conversationCode, setConversationCode] = useState('');
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!conversationCode) return;
-    const poll = async () => {
-      try {
-        const response = await fetch('/api/support/messages', { cache: 'no-store' });
-        if (!response.ok) return;
-        const data = await response.json();
-        setConversationCode((current) => current || data.conversationCode || '');
-        setMessages((current) => {
-          const existing = new Set(current.map((message) => message.id));
-          const incoming = (data.replies || []).filter((message: {id:string}) => !existing.has(message.id)).map((message: {id:string;content:string;createdAt:string}) => ({...message,sender:'team' as const}));
-          return incoming.length ? [...current,...incoming] : current;
-        });
-      } catch { /* próxima consulta atualiza a conversa */ }
-    };
-    void poll();
-    const timer = window.setInterval(poll, 5000);
-    return () => window.clearInterval(timer);
-  }, [conversationCode]);
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }); }, [messages, busy]);
-
-  async function send(event: React.FormEvent) {
-    event.preventDefault();
-    const message = draft.trim();
-    if (!message || busy) return;
-    setBusy(true); setError('');
-    try {
-      const response = await fetch('/api/support', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message }) });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Não foi possível enviar a mensagem.');
-      setConversationCode(data.conversationCode);
-      setMessages((current) => [...current,
-        { id: `customer-${Date.now()}`, content: message, sender: 'customer', createdAt: new Date().toISOString() },
-        { id: `auto-${Date.now()}`, content: 'Recebemos sua mensagem. Nossos atendentes estão ocupados e retornaremos em breve. Atendimento: 8h às 12h e 14h às 18h.', sender: 'system', createdAt: new Date().toISOString() },
-      ]);
-      setDraft('');
-    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Tente novamente em instantes.'); }
-    finally { setBusy(false); }
-  }
-
-  return <div className="modal-backdrop support-backdrop" onMouseDown={(event)=>event.target===event.currentTarget&&close()}><section className="support-chat" role="dialog" aria-modal="true" aria-label="Atendimento ComputaFacil">
-    <header className="support-chat-head"><span className="support-chat-icon"><MessageCircle size={19}/></span><div><strong>Atendimento ComputaFacil</strong><small><Clock3 size={12}/> 8h–12h · 14h–18h</small></div><button className="icon-button" onClick={close} aria-label="Fechar atendimento"><X size={19}/></button></header>
-    <div className="support-chat-intro"><span className="support-online-dot"/> Fale com a nossa equipe por aqui.{conversationCode&&<small>Atendimento {conversationCode}</small>}</div>
-    <div className="support-chat-messages" aria-live="polite">{!messages.length&&<div className="support-chat-empty"><MessageCircle size={24}/><strong>Como podemos ajudar?</strong><span>Envie sua mensagem e ela chegará à equipe no Discord.</span></div>}{messages.map((message)=><article key={message.id} className={`chat-message chat-${message.sender}`}><span>{message.sender==='team'?'Atendimento ComputaFacil':message.sender==='system'?'ComputaFacil':'Você'}</span><p>{message.content}</p></article>)}<div ref={bottomRef}/></div>
-    <form className="support-chat-form" onSubmit={send}><label className="visually-hidden" htmlFor="support-message">Sua mensagem</label><textarea id="support-message" rows={2} maxLength={1500} value={draft} onChange={(event)=>setDraft(event.target.value)} onKeyDown={(event)=>{if(event.key==='Enter'&&!event.shiftKey&&!event.nativeEvent.isComposing){event.preventDefault();event.currentTarget.form?.requestSubmit()}}} placeholder="Escreva sua mensagem…"/><button className="button button-red" disabled={busy||!draft.trim()}>{busy?<span className="spinner"/>:<MessageCircle size={16}/>}<span>{busy?'Enviando':'Enviar'}</span></button></form>
-    {error&&<p className="support-chat-error" role="alert">{error}</p>}
-    <p className="support-chat-hours">Horário do atendimento: 8h às 12h e 14h às 18h.</p>
-  </section></div>;
-}
-
 function describeProduct(product: Product) {
   const intros: Record<Category, string> = {
     'Placas de vídeo': 'Uma opção para jogar, criar e acelerar tarefas gráficas com a placa certa para o seu setup.',
@@ -321,7 +262,6 @@ export default function Home() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [supportOpen, setSupportOpen] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -376,12 +316,10 @@ export default function Home() {
       {!visible.length&&<div className="empty-results"><Search size={30}/><h3>Nenhum produto encontrado</h3><p>Tente outro termo ou escolha uma categoria.</p><button className="text-button" onClick={()=>{setQuery('');setCategory('Tudo')}}>Limpar filtros</button></div>}
       {category==='Tudo'&&!query&&<div className="all-products"><button className="button button-outline" onClick={()=>setShowAll(!showAll)}>{showAll?'Mostrar menos':'Ver todos os produtos'} {showAll?<ArrowDown size={16}/>:<ArrowRight size={16}/>}</button></div>}</section>
     <section className="promo-banner"><div className="promo-banner-copy"><span className="eyebrow">SEU SETUP MERECE</span><h2>Grandes ideias.<br/>Desempenho <em>gigante.</em></h2><p>Seu setup ideal está mais perto do que você imagina.<br/>Escolha, monte e aproveite.</p><button className="button button-white" onClick={()=>selectCategory('Periféricos')}>Complete seu setup <ArrowRight size={16}/></button></div><div className="promo-abstract"><div className="abstract-ring ring-one"/><div className="abstract-ring ring-two"/><img className="promo-brand-logo" src="/brand/computafacil-logo-bw.png" alt="ComputaFacil"/><div className="abstract-square"/></div></section>
-    <section className="newsletter"><div className="newsletter-icon"><Headphones size={22}/></div><div><h3>Precisa de ajuda com seu setup?</h3><p>Atendimento pelo chat: 8h às 12h e das 14h às 18h.</p></div><button className="button button-red" onClick={()=>setSupportOpen(true)}>Fale com a gente <MessageCircle size={16}/></button></section>
-    <footer className="site-footer"><div className="footer-main"><div className="footer-brand"><a className="brand brand-light" href="#inicio"><img className="brand-full-logo" src="/brand/computafacil-logo-light.png" alt="ComputaFacil"/></a><p>O seu próximo upgrade começa aqui.<br/>Tecnologia com preço justo e atendimento de verdade.</p><a className="discord-link" href="https://discord.gg/computafacil" target="_blank" rel="noreferrer" aria-label="Entre no Discord da ComputaFacil"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={siDiscord.path}/></svg><span>Entre no nosso Discord</span></a></div><div><h4>Explore</h4>{categories.map(c=><button key={c.name} onClick={()=>selectCategory(c.name)}>{c.name}</button>)}</div><div><h4>Atendimento</h4><button className="footer-chat-button" onClick={()=>setSupportOpen(true)}>Fale com a equipe pelo chat</button><span>8h–12h · 14h–18h</span></div><div><h4>Compra segura</h4><span><ShieldCheck size={15}/> Pagamento protegido</span><span><Truck size={15}/> Frete grátis até {date}</span><span><PackageCheck size={15}/> Envio de Pequim, China</span><span><Check size={15}/> Prazo de até 14 dias úteis</span></div></div><div className="footer-bottom"><span>© 2026 ComputaFacil. Feito para quem ama tecnologia.</span><span>Envio internacional de Pequim, China · Estimativa de até 14 dias úteis</span><a href="/privacidade">Privacidade</a><a href="/termos">Termos de uso</a><span>CNPJ: 24.618.388/0001-57</span></div></footer>
+    <footer className="site-footer"><div className="footer-main"><div className="footer-brand"><a className="brand brand-light" href="#inicio"><img className="brand-full-logo" src="/brand/computafacil-logo-light.png" alt="ComputaFacil"/></a><p>O seu próximo upgrade começa aqui.<br/>Tecnologia com preço justo e atendimento de verdade.</p><a className="discord-link" href="https://discord.gg/computafacil" target="_blank" rel="noreferrer" aria-label="Entre no Discord da ComputaFacil"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={siDiscord.path}/></svg><span>Entre no nosso Discord</span></a></div><div><h4>Explore</h4>{categories.map(c=><button key={c.name} onClick={()=>selectCategory(c.name)}>{c.name}</button>)}</div><div><h4>Compra segura</h4><span><ShieldCheck size={15}/> Pagamento protegido</span><span><Truck size={15}/> Frete grátis até {date}</span><span><PackageCheck size={15}/> Envio de Pequim, China</span><span><Check size={15}/> Prazo de até 14 dias úteis</span></div></div><div className="footer-bottom"><span>© 2026 ComputaFacil. Feito para quem ama tecnologia.</span><span>Envio internacional de Pequim, China · Estimativa de até 14 dias úteis</span><a href="/privacidade">Privacidade</a><a href="/termos">Termos de uso</a><span>CNPJ: 24.618.388/0001-57</span></div></footer>
     {cartOpen&&<div className="drawer-backdrop" onMouseDown={(e)=>e.target===e.currentTarget&&setCartOpen(false)}><aside className="cart-drawer"><div className="drawer-head"><div><span className="eyebrow">SUA SELEÇÃO</span><h2>Meu carrinho <small>{cart.reduce((n,i)=>n+i.quantity,0)} itens</small></h2></div><button className="icon-button" onClick={()=>setCartOpen(false)}><X/></button></div>{!cart.length?<div className="empty-cart"><span className="empty-bag"><ShoppingBag size={27}/></span><h3>Seu carrinho está vazio</h3><p>Descubra as peças perfeitas para o seu próximo upgrade.</p><button className="button button-red" onClick={()=>setCartOpen(false)}>Explorar produtos <ArrowRight size={16}/></button></div>:<><div className="cart-items">{cart.map(({product,quantity})=><div className="cart-item" key={product.id}><img src={product.image} alt=""/><div className="cart-item-info"><small>{product.category} · {product.brand}</small><strong>{product.name}</strong><span>{money(product.price)}</span><div className="quantity-control"><button onClick={()=>changeQuantity(product.id,-1)}><Minus size={13}/></button><span>{quantity}</span><button onClick={()=>changeQuantity(product.id,1)}><Plus size={13}/></button></div></div><button className="remove-item" onClick={()=>changeQuantity(product.id,-quantity)} aria-label="Remover produto"><X size={15}/></button></div>)}</div><div className="cart-footer"><div className="shipping-free"><Truck size={16}/><span>Parabéns! O frete grátis já está garantido.</span><Check size={15}/></div><div className="subtotal"><span>Subtotal</span><strong>{money(total)}</strong></div><p>Frete grátis até {date} · estimativa de até 14 dias úteis.</p>{!user&&<p className="auth-needed">Para comprar, você precisa entrar ou criar uma conta.</p>}<button className="button button-red checkout-button" onClick={beginCheckout} disabled={authLoading}>{authLoading?'Verificando sua conta…':user?'Ir para o pagamento':'Entrar e continuar'} <ArrowRight size={17}/></button><button className="continue-shopping" onClick={()=>setCartOpen(false)}><ChevronLeft size={16}/> Continuar comprando</button><div className="payment-logos"><ShieldCheck size={15}/> Pagamento protegido via ComputaFacil <span>Somente PIX</span></div></div></>}</aside></div>}
     <button className="floating-cart" onClick={()=>setCartOpen(true)} aria-label="Abrir carrinho"><ShoppingBag size={20}/><span>{cart.reduce((n,i)=>n+i.quantity,0)}</span></button>
     {checkoutOpen&&<Checkout cart={cart} total={total} close={()=>setCheckoutOpen(false)} clear={()=>setCart([])}/>}
-    {supportOpen&&<SupportChat close={()=>setSupportOpen(false)}/>}
     {detailProduct&&<ProductDetails product={detailProduct} price={detailPrice} variant={detailVariant} favorite={favorites.includes(detailProduct.id)} close={()=>setDetailProduct(null)} add={()=>add(detailProduct,detailVariant)} toggleFavorite={()=>setFavorites((old)=>old.includes(detailProduct.id)?old.filter((id)=>id!==detailProduct.id):[...old,detailProduct.id])} selectVariant={(size)=>setSelectedStorage((current)=>({...current,[detailProduct.id]:size}))}/>}
     {accountOpen&&<AccountDialog close={()=>{setAccountOpen(false);setCheckoutRequired(false);setPendingCheckout(false)}} onAuthenticated={authenticated} initialMode={accountMode} checkoutRequired={checkoutRequired}/>}
     {cartNotice&&<div className="cart-toast" role="status" aria-live="polite"><span><Check size={17}/></span><strong>{cartNotice}</strong></div>}
