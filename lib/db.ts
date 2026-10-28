@@ -70,6 +70,11 @@ export async function getOwnedOrder(transactionId: string, userId: string) {
   return rows[0] ?? null;
 }
 
+export async function listOrdersForUser(userId: string) {
+  const sql = await ensureOrdersTable();
+  return sql`SELECT external_ref, transaction_id, items, amount_cents, payment_status, tracking_code, created_at FROM computafacil_orders WHERE user_id=${userId} ORDER BY created_at DESC LIMIT 10`;
+}
+
 export async function getOrderTracking(transactionId: string, userId: string) {
   const order = await getOwnedOrder(transactionId, userId);
   if (!order || order.payment_status !== 'PAID') return null;

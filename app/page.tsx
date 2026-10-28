@@ -7,6 +7,7 @@ import { authClient } from '@/lib/auth/client';
 
 type CartItem = { product: Product; quantity: number };
 type StoreUser = { id: string; name?: string | null; email: string };
+type OrderSummary = { reference: string; items: Array<{ title?: string; quantity?: number; unitPrice?: number }>; amountCents: number; status: string; trackingCode?: string | null; createdAt: string; demo: boolean };
 const date = '04/11';
 const logoBySlug = { amd: siAmd, asus: siAsus, corsair: siCorsair, elgato: siElgato, hyperx: siHyperx, intel: siIntel, jbl: siJbl, kingstontechnology: siKingstontechnology, lenovo: siLenovo, lg: siLg, nvidia: siNvidia, razer: siRazer, redragon: siRedragon, samsung: siSamsung, seagate: siSeagate, steelseries: siSteelseries };
 const logoImageBySlug: Record<string, string> = { pny: '/brands/pny.svg', aoc: 'https://commons.wikimedia.org/wiki/Special:FilePath/Aoc_international_logo.svg', logitech: 'https://commons.wikimedia.org/wiki/Special:FilePath/Logitech_logo.svg', xpg: 'https://quadrastores.com/cdn/shop/collections/XPG_logo.png?v=1759053770&width=300', philips: 'https://upload.wikimedia.org/wikipedia/commons/6/67/Philips_logo_neu.JPG', multi: 'https://iconlogovector.com/uploads/images/2024/09/lg-66dc0a7f33041-Multi-Multilaser-agora-e-Mu.webp', 'western-digital': 'https://commons.wikimedia.org/wiki/Special:FilePath/Western_Digital_logo_%282022%29.svg', '8bitdo': 'https://upload.wikimedia.org/wikipedia/commons/a/ac/8BitDo_logo.png', anker: 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Anker_logo.svg', fifine: 'https://files.smarty.cz/products/tools/logo/fifine.jpg', northbayou: 'https://shop.tti.com.ph/pub/media/rokanthemes/brand/northbayou.png', tdagger: 'https://static.wixstatic.com/media/71a6c2_dd8e98071fa44f72ac6cf631b2f6860a~mv2.png/v1/fill/w_280%2Ch_48%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/T-DAGGER_LOGO-2_360x.png' };
@@ -23,9 +24,6 @@ function AccountDialog({ close, onAuthenticated, initialMode = 'signin', checkou
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [couponInput, setCouponInput] = useState('');
-  const [couponApplied, setCouponApplied] = useState(false);
-  const [couponMessage, setCouponMessage] = useState('');
   async function submit(event: React.FormEvent) {
     event.preventDefault(); setBusy(true); setError('');
     try {
@@ -59,10 +57,32 @@ function AccountDialog({ close, onAuthenticated, initialMode = 'signin', checkou
     <p className="secure-note"><ShieldCheck size={15}/> Seus dados de acesso são protegidos.</p>
   </section></div>;
 }
+
+function DeliveriesDialog({ close }: { close: () => void }) {
+  const [orders, setOrders] = useState<OrderSummary[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  useEffect(() => {
+    let active = true;
+    fetch('/api/orders', { cache: 'no-store' }).then(async (response) => {
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Não foi possível carregar suas entregas.');
+      if (active) setOrders(result.orders || []);
+    }).catch((cause) => { if (active) setError(cause instanceof Error ? cause.message : 'Tente novamente.'); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, []);
+  const statusLabel = (status: string) => ({ DELIVERED: 'Entregue', PAID: 'Preparando para envio', IN_TRANSIT: 'Em trânsito', PENDING: 'Aguardando pagamento', FAILED: 'Pagamento não concluído', CANCELLED: 'Cancelado' }[status] || status);
+  return <div className="modal-backdrop" onMouseDown={(event)=>event.target===event.currentTarget&&close()}><section className="checkout-modal deliveries-modal" aria-label="Minhas entregas"><header className="modal-head"><div><span className="eyebrow">SUA CONTA</span><h2>Minhas Entregas</h2></div><button className="icon-button" onClick={close} aria-label="Fechar"><X size={20}/></button></header>{loading?<div className="delivery-empty"><span className="spinner"/>Carregando seus pedidos…</div>:error?<div className="form-error" role="alert">{error}</div>:orders.length===0?<div className="delivery-empty"><PackageCheck size={32}/><h3>Você ainda não tem pedidos</h3><p>Quando fizer uma compra, o acompanhamento aparecerá aqui.</p></div>:<div className="delivery-list">{orders.map((order)=><article className="delivery-order" key={order.reference}><header><div><span className="eyebrow">{order.demo?'EXEMPLO DE DEMONSTRAÇÃO':'PEDIDO'}</span><strong>{order.reference}</strong></div><span className={`delivery-status ${order.status==='DELIVERED'?'delivery-complete':''}`}><PackageCheck size={14}/>{statusLabel(order.status)}</span></header><p className="delivery-date">{new Date(order.createdAt).toLocaleDateString('pt-BR')}</p><div className="delivery-items">{order.items?.map((item,index)=><div key={`${order.reference}-${index}`}><span>{item.title || 'Produto'} × {item.quantity || 1}</span><strong>{money(((item.unitPrice || 0)*(item.quantity || 1))/100)}</strong></div>)}</div><footer><span>{order.trackingCode?<><Truck size={14}/> Rastreio: {order.trackingCode}</>:'Acompanhe a situação do pedido por aqui'}</span><strong>{money(order.amountCents/100)}</strong></footer></article>)}</div>}</section></div>;
+}
+
 function Checkout({ cart, total, close, clear }: { cart: CartItem[]; total: number; close: () => void; clear: () => void }) {
   const [busy, setBusy] = useState(false);
   const [checkingStatus, setCheckingStatus] = useState(false);
   const [error, setError] = useState('');
+  const [couponInput, setCouponInput] = useState('');
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponMessage, setCouponMessage] = useState('');
   const [payment, setPayment] = useState<any>(null);
   const [copied, setCopied] = useState(false);
   const [invoiceStage, setInvoiceStage] = useState<'idle'|'generating'|'ready'|'error'>('idle');
@@ -270,6 +290,7 @@ export default function Home() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [deliveriesOpen, setDeliveriesOpen] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -281,6 +302,7 @@ export default function Home() {
   const [accountMode, setAccountMode] = useState<'signin'|'signup'>('signin');
   const [checkoutRequired, setCheckoutRequired] = useState(false);
   const [pendingCheckout, setPendingCheckout] = useState(false);
+  const [pendingDeliveries, setPendingDeliveries] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [user, setUser] = useState<StoreUser | null>(null);
   useEffect(() => {
@@ -308,13 +330,15 @@ export default function Home() {
     if (!user) { setPendingCheckout(true); setCheckoutRequired(true); setAccountMode('signin'); setAccountOpen(true); return; }
     setCheckoutOpen(true);
   }
-  function authenticated(nextUser: StoreUser) { setUser(nextUser); if (pendingCheckout) { setPendingCheckout(false); setCheckoutRequired(false); setCheckoutOpen(true); } }
-  async function signOut() { try { await authClient.signOut(); } finally { setUser(null); setAccountOpen(false); setCheckoutRequired(false); setPendingCheckout(false); } }
+  function authenticated(nextUser: StoreUser) { setUser(nextUser); if (pendingCheckout) { setPendingCheckout(false); setCheckoutRequired(false); setCheckoutOpen(true); } else if (pendingDeliveries) { setPendingDeliveries(false); setDeliveriesOpen(true); } }
+  async function signOut() { try { await authClient.signOut(); } finally { setUser(null); setAccountOpen(false); setDeliveriesOpen(false); setCheckoutRequired(false); setPendingCheckout(false); setPendingDeliveries(false); } }
+  function openDeliveries() { setMenuOpen(false); if (!user) { setPendingDeliveries(true); setCheckoutRequired(false); setAccountMode('signin'); setAccountOpen(true); return; } setDeliveriesOpen(true); }
+  function goHome() { setCategory('Tudo'); setShowAll(false); setMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }
   function selectCategory(next: Category | 'Tudo') { setCategory(next); setShowAll(next !== 'Tudo'); setMenuOpen(false); document.getElementById('produtos')?.scrollIntoView({ behavior: 'smooth' }); }
   return <main>
     <div className="promo-bar"><span><Zap size={14} fill="currentColor"/> FRETE GRÁTIS em todo o Brasil até <strong>{date}</strong></span><span className="promo-end">Aproveite enquanto dá tempo <ArrowRight size={14}/></span></div>
     <header className="site-header"><div className="header-main"><button className="mobile-menu icon-button" onClick={()=>setMenuOpen(!menuOpen)} aria-label="Abrir menu"><Menu/></button><a className="brand" href="#inicio" aria-label="ComputaFacil início"><img className="brand-mark" src="/brand/computafacil-mark.png" alt=""/><span className="brand-copy">Computa<span>Facil</span><small>TECNOLOGIA PRA SUA VIDA</small></span></a><div className="search-box"><Search size={19}/><input placeholder="O que você está procurando?" value={query} onChange={(e)=>{setQuery(e.target.value); document.getElementById('produtos')?.scrollIntoView({behavior:'smooth'});}}/><kbd>⌘ K</kbd></div><div className="header-actions">{user?<div className="account-action"><span className="account-icon">{user.name?.charAt(0).toUpperCase()||'♙'}</span><span>Olá, {user.name?.split(' ')[0]||'cliente'}<small><button onClick={signOut}>Sair da conta</button></small></span></div>:<button className="account-action" onClick={()=>{setCheckoutRequired(false);setAccountMode('signin');setAccountOpen(true)}} disabled={authLoading}><span className="account-icon">♙</span><span>Olá, visitante<small>{authLoading?'Verificando…':'Entrar / cadastrar'}</small></span></button>}<button className="header-cart" onClick={()=>setCartOpen(true)} aria-label="Abrir carrinho"><ShoppingBag size={21}/><span className="cart-count">{cart.reduce((n,i)=>n+i.quantity,0)}</span></button></div></div>
-      <nav className={`nav-bar ${menuOpen?'nav-open':''}`}><div className="nav-inner"><button onClick={()=>selectCategory('Tudo')} className={category==='Tudo'?'active':''}>Início</button>{categories.map((item)=><button key={item.name} onClick={()=>selectCategory(item.name)} className={category===item.name?'active':''}>{item.name}</button>)}<button className="deals-nav" onClick={()=>selectCategory('Tudo')}><Zap size={14}/> Ofertas</button><span className="nav-note"><ShieldCheck size={14}/> Compra protegida</span></div></nav>
+      <nav className={`nav-bar ${menuOpen?'nav-open':''}`}><div className="nav-inner"><button onClick={goHome} className={category==='Tudo'?'active':''}>Início</button><button onClick={openDeliveries}>Minhas Entregas</button>{categories.map((item)=><button key={item.name} onClick={()=>selectCategory(item.name)} className={category===item.name?'active':''}>{item.name}</button>)}<button className="deals-nav" onClick={()=>selectCategory('Tudo')}><Zap size={14}/> Ofertas</button><span className="nav-note"><ShieldCheck size={14}/> Compra protegida</span></div></nav>
     </header>
     <section className="hero" id="inicio" aria-label="Destaque da ComputaFacil"><article className="hero-slide"><div className="hero-copy"><div className="hero-label"><span/> {heroSlides[0].eyebrow}</div><h1>{heroSlides[0].first}<br/>{heroSlides[0].second} <em>{heroSlides[0].accent}</em></h1><p>{heroSlides[0].description}</p><button className="button button-white" onClick={()=>selectCategory(heroSlides[0].category)}>{heroSlides[0].button} <ArrowRight size={17}/></button><div className="hero-perks"><span><Truck size={16}/> Frete grátis até {date}</span><i/><span><ShieldCheck size={16}/> Compra protegida</span></div></div><div className="hero-visual"><div className="hero-glow"/><img src={heroSlides[0].image} alt={heroSlides[0].imageAlt}/><div className="hero-sticker"><span>{heroSlides[0].badgeLabel}</span><strong>{heroSlides[0].badgeValue}</strong><span>{heroSlides[0].badgeFoot}</span></div><div className="hero-product-tag"><span className="tag-spark">✳</span><span>{heroSlides[0].tag}<small>{heroSlides[0].tagNote}</small></span><ArrowUpRight size={18}/></div></div></article></section>
     <section className="trust-strip"><div><Truck/><span><strong>Frete grátis</strong><small>Até {date}, para todo o Brasil</small></span></div><div><PackageCheck/><span><strong>Chega rapidinho</strong><small>Entrega em até 14 dias úteis</small></span></div><div><ShieldCheck/><span><strong>Compra protegida</strong><small>Pagamento protegido via ComputaFacil</small></span></div><div><BadgeCheck/><span><strong>Produtos originais</strong><small>Qualidade que você merece</small></span></div></section>
@@ -328,8 +352,9 @@ export default function Home() {
     {cartOpen&&<div className="drawer-backdrop" onMouseDown={(e)=>e.target===e.currentTarget&&setCartOpen(false)}><aside className="cart-drawer"><div className="drawer-head"><div><span className="eyebrow">SUA SELEÇÃO</span><h2>Meu carrinho <small>{cart.reduce((n,i)=>n+i.quantity,0)} itens</small></h2></div><button className="icon-button" onClick={()=>setCartOpen(false)}><X/></button></div>{!cart.length?<div className="empty-cart"><span className="empty-bag"><ShoppingBag size={27}/></span><h3>Seu carrinho está vazio</h3><p>Descubra as peças perfeitas para o seu próximo upgrade.</p><button className="button button-red" onClick={()=>setCartOpen(false)}>Explorar produtos <ArrowRight size={16}/></button></div>:<><div className="cart-items">{cart.map(({product,quantity})=><div className="cart-item" key={product.id}><img src={product.image} alt=""/><div className="cart-item-info"><small>{product.category} · {product.brand}</small><strong>{product.name}</strong><span>{money(product.price)}</span><div className="quantity-control"><button onClick={()=>changeQuantity(product.id,-1)}><Minus size={13}/></button><span>{quantity}</span><button onClick={()=>changeQuantity(product.id,1)}><Plus size={13}/></button></div></div><button className="remove-item" onClick={()=>changeQuantity(product.id,-quantity)} aria-label="Remover produto"><X size={15}/></button></div>)}</div><div className="cart-footer"><div className="shipping-free"><Truck size={16}/><span>Parabéns! O frete grátis já está garantido.</span><Check size={15}/></div><div className="subtotal"><span>Subtotal</span><strong>{money(total)}</strong></div><p>Frete grátis até {date} · estimativa de até 14 dias úteis.</p>{!user&&<p className="auth-needed">Para comprar, você precisa entrar ou criar uma conta.</p>}<button className="button button-red checkout-button" onClick={beginCheckout} disabled={authLoading}>{authLoading?'Verificando sua conta…':user?'Ir para o pagamento':'Entrar e continuar'} <ArrowRight size={17}/></button><button className="continue-shopping" onClick={()=>setCartOpen(false)}><ChevronLeft size={16}/> Continuar comprando</button><div className="payment-logos"><ShieldCheck size={15}/> Pagamento protegido via ComputaFacil <span>Somente PIX</span></div></div></>}</aside></div>}
     <button className="floating-cart" onClick={()=>setCartOpen(true)} aria-label="Abrir carrinho"><ShoppingBag size={20}/><span>{cart.reduce((n,i)=>n+i.quantity,0)}</span></button>
     {checkoutOpen&&<Checkout cart={cart} total={total} close={()=>setCheckoutOpen(false)} clear={()=>setCart([])}/>}
+    {deliveriesOpen&&<DeliveriesDialog close={()=>setDeliveriesOpen(false)}/>}
     {detailProduct&&<ProductDetails product={detailProduct} price={detailPrice} variant={detailVariant} favorite={favorites.includes(detailProduct.id)} close={()=>setDetailProduct(null)} add={()=>add(detailProduct,detailVariant)} toggleFavorite={()=>setFavorites((old)=>old.includes(detailProduct.id)?old.filter((id)=>id!==detailProduct.id):[...old,detailProduct.id])} selectVariant={(size)=>setSelectedStorage((current)=>({...current,[detailProduct.id]:size}))}/>}
-    {accountOpen&&<AccountDialog close={()=>{setAccountOpen(false);setCheckoutRequired(false);setPendingCheckout(false)}} onAuthenticated={authenticated} initialMode={accountMode} checkoutRequired={checkoutRequired}/>}
+    {accountOpen&&<AccountDialog close={()=>{setAccountOpen(false);setCheckoutRequired(false);setPendingCheckout(false);setPendingDeliveries(false)}} onAuthenticated={authenticated} initialMode={accountMode} checkoutRequired={checkoutRequired}/>}
     {cartNotice&&<div className="cart-toast" role="status" aria-live="polite"><span><Check size={17}/></span><strong>{cartNotice}</strong></div>}
   </main>;
 }
