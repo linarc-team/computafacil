@@ -8,7 +8,7 @@ export const categories: { name: Category; icon: string; image: string }[] = [
   { name: 'Processadores', icon: '▦', image: photo('photo-1676315487591-7a1d5c02ecae') },
   { name: 'Memória RAM', icon: '▥', image: photo('photo-1562976540-1502c2145186') },
   { name: 'Periféricos', icon: '⌨', image: '/products/logitech-m90-mouse-usb-com-fio.webp' },
-  { name: 'Armazenamento', icon: '▤', image: photo('photo-1597872200969-2b65d56bd16b') },
+  { name: 'Armazenamento', icon: '▤', image: '/products/wd-blue-sn580-m-2-nvme-ssd-250-gb-1-tb.webp' },
 ];
 type ProductGroup = [Category, string[], number[], string, string];
 const records: ProductGroup[] = [
