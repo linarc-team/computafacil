@@ -21,8 +21,8 @@
   },
   {
     "name": "AMD Ryzen 7 7800X3D",
-    "url": "https://i.ebayimg.com/images/g/ERsAAeSwSp9oZq6L/s-l500.jpg",
-    "file": "/products/amd-ryzen-7-7800x3d.webp"
+    "url": "https://cdn11.bigcommerce.com/s-3wzspkde5p/images/stencil/1200x1200/products/137/421/amd-ryzen7-7800-x3d-1200x1200__82989.1681238418.png?c=1",
+    "file": "/products/amd-ryzen-7-7800x3d.png"
   },
   {
     "name": "AMD Ryzen 9 7950X",
@@ -86,8 +86,8 @@
   },
   {
     "name": "Intel Core i5-12400F",
-    "url": "https://www.ixbt.com/img/n1/news/2021/11/2/8EXyjeG8y4BEqnGn_large.jpg",
-    "file": "/products/intel-core-i5-12400f.webp"
+    "url": "https://bizweb.dktcdn.net/100/446/400/products/cpu-intel-core-i5-12400f-1.jpg?v=1651905702190",
+    "file": "/products/intel-core-i5-12400f.jpg"
   },
   {
     "name": "Intel Core i5-14600K",
@@ -141,8 +141,8 @@
   },
   {
     "name": "LG UltraGear 25GR75FG-B 24.5” 360Hz",
-    "url": "https://img1.kakaku.k-img.com/Images/news_icv/900x675/2023031/20230315181114_998_.jpg",
-    "file": "/products/lg-ultragear-25gr75fg-b-24-5-360hz.webp"
+    "url": "https://www.lg.com/content/dam/channel/wcms/fr/images/moniteurs/25gr75fg-b_aeuq_eefs_fr_c/gallery/large01.jpg?w=800",
+    "file": "/products/lg-ultragear-25gr75fg-b-24-5-360hz.jpg"
   },
   {
     "name": "LG UltraGear 27GR75Q-B 27” QHD 165Hz",
@@ -268,40 +268,5 @@
     "name": "AMD Ryzen 9 7900X",
     "url": "https://pcinq.com/wp-content/uploads/2023/03/AMD_Ryzen-9-7900X_Boxed.webp",
     "file": "/products/amd-ryzen-9-7900x.webp"
-  },
-  {
-    "name": "C3Tech KB-M11BK — Teclado USB ABNT2",
-    "url": "https://images.tcdn.com.br/img/img_prod/1361945/teclado_usb_c3tech_kb_m11bk_multimdia_preto_1_20260617104559_a3ed850c527c.jpg",
-    "file": "/products/c3tech-kb-m11bk-teclado-usb-abnt2.webp"
-  },
-  {
-    "name": "Dazz Quartum — Controle USB para PC/PS3/PS4",
-    "url": "https://cdn.awsli.com.br/2500x2500/2547/2547358/produto/357548696/controle-pc-ps3-e-ps4-com-fio-usb-dazz-quartum-ra7f8sxyqg.jpg",
-    "file": "/products/dazz-quartum-controle-usb-para-pc-ps3-ps4.webp"
-  },
-  {
-    "name": "Dell MS116 — Mouse USB com fio",
-    "url": "https://snpi.dell.com/snp/images/products/large/en-ca~275-BBCF/275-BBCF.jpg",
-    "file": "/products/dell-ms116-mouse-usb-com-fio.webp"
-  },
-  {
-    "name": "Fortrek Speed MPG101 — Mousepad",
-    "url": "https://img.terabyteshop.com.br/produto/g/mousepad-gamer-fortrek-speed-mpg101-pt-medio-320x240mm-preto_225630.jpg",
-    "file": "/products/fortrek-speed-mpg101-mousepad.webp"
-  },
-  {
-    "name": "JBL C50HI — Fone com fio e microfone",
-    "url": "https://images.kabum.com.br/produtos/fotos/sync_mirakl/128140/xlarge/Fone-De-Ouvido-JBL-C50HI-Intra-Auricular-Com-Microfone-Preto_1769788437.jpg",
-    "file": "/products/jbl-c50hi-fone-com-fio-e-microfone.webp"
-  },
-  {
-    "name": "AOC 24B35HM2 23.8” Full HD 100Hz",
-    "url": "https://cdn.sanity.io/images/hf5b3axp/production/5df35e9a4b8bdd6edf94218150e16a116808d989-5280x4920.png?auto=format&fit=max&w=2304",
-    "file": "/products/aoc-24b35hm2-23-8-full-hd-100hz.webp"
-  },
-  {
-    "name": "LG 24MS500-B 23.8” IPS Full HD 100Hz",
-    "url": "https://www.lg.com/content/dam/channel/wcms/de/monitore/fhd-qhd/24ms500-b/gallery/03-zoom/fhd-24ms500-mobilezoom-01.jpg",
-    "file": "/products/lg-24ms500-b-23-8-ips-full-hd-100hz.webp"
   }
 ]

@@ -3,26 +3,27 @@ export type ProductVariant = { size: string; price: number };
 export type Product = { id: string; name: string; brand: string; brandIcon: string; category: Category; price: number; oldPrice: number; image: string; badge?: string; detail: string; rating: string; variants?: ProductVariant[]; baseProductId?: string; selectedVariant?: string };
 const photo = (id: string, width = 720) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
 export const categories: { name: Category; icon: string; image: string }[] = [
-  { name: 'Placas de vídeo', icon: '◈', image: photo('photo-1591488320449-011701bb6704') },
+  { name: 'Placas de vídeo', icon: '◈', image: '/products/asus-dual-geforce-rtx-4060-ti-oc-8gb.webp' },
   { name: 'Monitores', icon: '▣', image: photo('photo-1527443224154-c4a3942d3acf') },
   { name: 'Processadores', icon: '▦', image: photo('photo-1676315487591-7a1d5c02ecae') },
   { name: 'Memória RAM', icon: '▥', image: photo('photo-1562976540-1502c2145186') },
-  { name: 'Periféricos', icon: '⌨', image: photo('photo-1636489910753-1880d26bf218') },
-  { name: 'Armazenamento', icon: '▤', image: '/products/wd-blue-sn580-m-2-nvme-ssd-250-gb-1-tb.webp' },
+  { name: 'Periféricos', icon: '⌨', image: '/products/logitech-m90-mouse-usb-com-fio.webp' },
+  { name: 'Armazenamento', icon: '▤', image: photo('photo-1597872200969-2b65d56bd16b') },
 ];
 type ProductGroup = [Category, string[], number[], string, string];
 const records: ProductGroup[] = [
   ['Placas de vídeo', ['PNY GeForce RTX 4060 Verto Dual Fan 8GB','ASUS Dual GeForce RTX 4060 Ti OC 8GB','ASUS Dual GeForce RTX 4070 SUPER EVO 12GB','ASUS Dual Radeon RX 7600 OC 8GB','ASUS Dual Radeon RX 7700 XT OC 12GB','ASUS TUF Gaming GeForce RTX 4070 Ti SUPER 16GB'], [1999,2599,3700,1749,2899,5799], 'photo-1591488320449-011701bb6704', 'Nova geração, desempenho de sobra para jogar e criar.'],
-  ['Monitores', ['AOC 24G4 Gamer 23.8” IPS 180Hz','LG UltraGear 27GR75Q-B 27” QHD 165Hz','Samsung ViewFinity S5 34” UltraWide','ASUS TUF Gaming VG27UQ1A 27” 4K UHD 160Hz','AOC C32G2E Curvo 31.5” 165Hz','Lenovo ThinkVision M15 Portátil 15.6”','LG UltraGear 25GR75FG-B 24.5” 360Hz','AOC 24B35HM2 23.8” Full HD 100Hz','LG 24MS500-B 23.8” IPS Full HD 100Hz'], [799,1399,1199,1999,2099,799,1599,540,430], 'photo-1527443224154-c4a3942d3acf', 'Imagem fluida, cores vivas e acabamento premium.'],
+  ['Monitores', ['AOC 24G4 Gamer 23.8” IPS 180Hz','LG UltraGear 27GR75Q-B 27” QHD 165Hz','Samsung ViewFinity S5 34” UltraWide','ASUS TUF Gaming VG27UQ1A 27” 4K UHD 160Hz','AOC C32G2E Curvo 31.5” 165Hz','Lenovo ThinkVision M15 Portátil 15.6”','LG UltraGear 25GR75FG-B 24.5” 360Hz'], [799,1399,1199,1999,2099,799,1599], 'photo-1527443224154-c4a3942d3acf', 'Imagem fluida, cores vivas e acabamento premium.'],
   ['Processadores', ['AMD Ryzen 5 5600','AMD Ryzen 5 7600','AMD Ryzen 7 5700X','AMD Ryzen 7 7800X3D','AMD Ryzen 9 7900X','AMD Ryzen 9 7950X','Intel Core i5-12400F','Intel Core i5-14600K','Intel Core i7-14700K','Intel Core i9-14900K','Intel Core Ultra 5 245K','Intel Core Ultra 7 265K'], [499,799,729,1899,1799,2699,559,1249,1799,2399,1399,1999], 'photo-1676315487591-7a1d5c02ecae', 'Potência e eficiência para sua próxima montagem.'],
   ['Memória RAM', ['Kingston Fury Beast DDR4 16GB 3200MHz','Kingston Fury Beast DDR4 32GB 3200MHz','Kingston Fury Beast DDR5 32GB 6000MHz','Corsair Vengeance DDR5 32GB 6000MHz','XPG Lancer RGB DDR5 32GB 6000MHz'], [179,299,499,579,599], 'photo-1562976540-1502c2145186', 'Mais velocidade para multitarefas e jogos.'],
-  ['Periféricos', ['Logitech M90 — Mouse USB com fio','Multilaser TC193 — Teclado USB ABNT2','Philips TAUE101BK — Fone com fio e microfone','Logitech G Pro X TKL LIGHTSPEED — Teclado','Razer DeathAdder V3 Pro — Mouse','HyperX Cloud III — Headset','SteelSeries QcK Edge XL — Mousepad','Logitech Brio 500 — Webcam','FIFINE AM8 — Microfone USB','8BitDo Ultimate C — Controle sem fio','JBL Quantum Duo — Caixa de som','Logitech Pebble Keys 2 K380s — Teclado','Logitech MX Master 3S — Mouse sem fio','Razer BlackShark V2 Pro — Headset','Elgato Wave:3 — Microfone Gamer','Logitech G Pro X Superlight 2 — Mouse','Redragon K617 Fizz — Teclado 60%','HyperX Pulsefire Mat XL — Mousepad','North Bayou H100 — Suporte articulado','Anker 565 Docking Station — Dock USB-C','Dazz Quartum — Controle USB para PC/PS3/PS4','Dell MS116 — Mouse USB com fio','C3Tech KB-M11BK — Teclado USB ABNT2','Fortrek Speed MPG101 — Mousepad','JBL C50HI — Fone com fio e microfone'], [30,30,39,299,279,399,99,219,319,259,129,169,399,499,499,449,199,119,179,349,69,39,29,25,65], 'photo-1636489910753-1880d26bf218', 'Periféricos de marcas reconhecidas para completar seu setup.'],
+  ['Periféricos', ['Logitech M90 — Mouse USB com fio','Multilaser TC193 — Teclado USB ABNT2','Philips TAUE101BK — Fone com fio e microfone','Logitech G Pro X TKL LIGHTSPEED — Teclado','Razer DeathAdder V3 Pro — Mouse','HyperX Cloud III — Headset','SteelSeries QcK Edge XL — Mousepad','Logitech Brio 500 — Webcam','FIFINE AM8 — Microfone USB','8BitDo Ultimate C — Controle sem fio','JBL Quantum Duo — Caixa de som','Logitech Pebble Keys 2 K380s — Teclado','Logitech MX Master 3S — Mouse sem fio','Razer BlackShark V2 Pro — Headset','Elgato Wave:3 — Microfone Gamer','Logitech G Pro X Superlight 2 — Mouse','Redragon K617 Fizz — Teclado 60%','HyperX Pulsefire Mat XL — Mousepad','North Bayou H100 — Suporte articulado','Anker 565 Docking Station — Dock USB-C'], [30,30,39,299,279,399,99,219,319,259,129,169,399,499,499,449,199,119,179,349], 'photo-1636489910753-1880d26bf218', 'Periféricos de marcas reconhecidas para completar seu setup.'],
 ];
 const iconForBrand: Record<string, string> = {
   NVIDIA: 'nvidia', PNY: 'pny', AMD: 'amd', Intel: 'intel', AOC: 'aoc', LG: 'lg', Samsung: 'samsung', ASUS: 'asus', Lenovo: 'lenovo',
   Kingston: 'kingstontechnology', Corsair: 'corsair', XPG: 'xpg', Logitech: 'logitech', Razer: 'razer', HyperX: 'hyperx', Multi: 'multi', Philips: 'philips',
   SteelSeries: 'steelseries', FIFINE: 'fifine', '8BitDo': '8bitdo', JBL: 'jbl', Anker: 'anker', Elgato: 'elgato', Redragon: 'redragon', Govee: 'govee', 'North Bayou': 'northbayou',
-  'Western Digital': 'western-digital', Seagate: 'seagate', 'T-Dagger': 'tdagger',
+  'Western Digital': 'western-digital', Seagate: 'seagate',
+  'T-Dagger': 'tdagger',
 };
 // Imagens individuais dos modelos identificados (fontes de produto, não fotos genéricas de categoria).
 const productImages: Record<string, string> = {
@@ -41,21 +42,19 @@ const productImages: Record<string, string> = {
   'ASUS Dual Radeon RX 7700 XT OC 12GB': '/products/asus-dual-radeon-rx-7700-xt-oc-12gb.webp',
   'ASUS TUF Gaming GeForce RTX 4070 Ti SUPER 16GB': '/products/asus-tuf-gaming-geforce-rtx-4070-ti-super-16gb.webp',
   'AOC 24G4 Gamer 23.8” IPS 180Hz': '/products/aoc-24g4-gamer-23-8-ips-180hz.webp',
-  'AOC 24B35HM2 23.8” Full HD 100Hz': '/products/aoc-24b35hm2-23-8-full-hd-100hz.webp',
   'LG UltraGear 27GR75Q-B 27” QHD 165Hz': '/products/lg-ultragear-27gr75q-b-27-qhd-165hz.webp',
-  'LG 24MS500-B 23.8” IPS Full HD 100Hz': '/products/lg-24ms500-b-23-8-ips-full-hd-100hz.webp',
   'Samsung ViewFinity S5 34” UltraWide': '/products/samsung-viewfinity-s5-34-ultrawide.webp',
   'ASUS TUF Gaming VG27UQ1A 27” 4K UHD 160Hz': '/products/asus-tuf-gaming-vg27uq1a-27-4k-uhd-160hz.webp',
   'AOC C32G2E Curvo 31.5” 165Hz': '/products/aoc-c32g2e-curvo-31-5-165hz.webp',
   'Lenovo ThinkVision M15 Portátil 15.6”': '/products/lenovo-thinkvision-m15-portatil-15-6.webp',
-  'LG UltraGear 25GR75FG-B 24.5” 360Hz': '/products/lg-ultragear-25gr75fg-b-24-5-360hz.webp',
+  'LG UltraGear 25GR75FG-B 24.5” 360Hz': '/products/lg-ultragear-25gr75fg-b-24-5-360hz.jpg',
   'AMD Ryzen 5 5600': '/products/amd-ryzen-5-5600.webp',
   'AMD Ryzen 5 7600': '/products/amd-ryzen-5-7600.webp',
   'AMD Ryzen 7 5700X': '/products/amd-ryzen-7-5700x.webp',
-  'AMD Ryzen 7 7800X3D': '/products/amd-ryzen-7-7800x3d.webp',
+  'AMD Ryzen 7 7800X3D': '/products/amd-ryzen-7-7800x3d.png',
   'AMD Ryzen 9 7900X': '/products/amd-ryzen-9-7900x.webp',
   'AMD Ryzen 9 7950X': '/products/amd-ryzen-9-7950x.webp',
-  'Intel Core i5-12400F': '/products/intel-core-i5-12400f.webp',
+  'Intel Core i5-12400F': '/products/intel-core-i5-12400f.jpg',
   'Intel Core i5-14600K': '/products/intel-core-i5-14600k.webp',
   'Intel Core i7-14700K': '/products/intel-core-i7-14700k.webp',
   'Intel Core i9-14900K': '/products/intel-core-i9-14900k.webp',
@@ -86,23 +85,11 @@ const productImages: Record<string, string> = {
   'HyperX Pulsefire Mat XL — Mousepad': '/products/hyperx-pulsefire-mat-xl-mousepad.webp',
   'North Bayou H100 — Suporte articulado': '/products/north-bayou-h100-suporte-articulado.webp',
   'Anker 565 Docking Station — Dock USB-C': '/products/anker-565-docking-station-dock-usb-c.webp',
-  'Dazz Quartum — Controle USB para PC/PS3/PS4': '/products/dazz-quartum-controle-usb-para-pc-ps3-ps4.webp',
-  'Dell MS116 — Mouse USB com fio': '/products/dell-ms116-mouse-usb-com-fio.webp',
-  'C3Tech KB-M11BK — Teclado USB ABNT2': '/products/c3tech-kb-m11bk-teclado-usb-abnt2.webp',
-  'Fortrek Speed MPG101 — Mousepad': '/products/fortrek-speed-mpg101-mousepad.webp',
-  'JBL C50HI — Fone com fio e microfone': '/products/jbl-c50hi-fone-com-fio-e-microfone.webp',
-};
-const productDetails: Record<string, string> = {
-  'Dazz Quartum — Controle USB para PC/PS3/PS4': 'Controle com fio USB para PC, PS3 e PS4. Importante: este modelo não é um controle de PS5 e não deve ser anunciado como compatível com jogos nativos de PS5. Um DualSense compatível com PS5 não cabe no limite de R$ 70.',
 };
 function brandFor(name: string, category: Category): string {
   if (category === 'Placas de vídeo') return name.startsWith('PNY') ? 'PNY' : name.startsWith('ASUS') ? 'ASUS' : name.startsWith('AMD') ? 'AMD' : 'NVIDIA';
   if (category === 'Processadores') return name.startsWith('AMD') ? 'AMD' : 'Intel';
   if (category === 'Armazenamento') return name.startsWith('WD Blue') ? 'Western Digital' : name.startsWith('Seagate') ? 'Seagate' : 'Kingston';
-  if (name.startsWith('Dazz')) return 'Dazz';
-  if (name.startsWith('Dell')) return 'Dell';
-  if (name.startsWith('C3Tech')) return 'C3Tech';
-  if (name.startsWith('Fortrek')) return 'Fortrek';
   return Object.keys(iconForBrand).find((brand) => name.startsWith(brand)) ?? 'ComputaFacil';
 }
 const regularProducts: Product[] = records.flatMap(([category, names, prices, image, detail]) => names.map((name, i) => {
@@ -111,7 +98,7 @@ const regularProducts: Product[] = records.flatMap(([category, names, prices, im
   return {
     id: `${category.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${i + 1}`,
     name, brand, brandIcon: iconForBrand[brand] ?? 'cpu', category, price: category === 'Placas de vídeo' ? Math.round(prices[i] * 0.95) : prices[i], oldPrice,
-    image: productImages[name] ?? photo(image, 800), detail: productDetails[name] ?? detail,
+    image: productImages[name] ?? photo(image, 800), detail,
     ...(i === 2 && category === 'Placas de vídeo' ? { badge: 'Oferta' } : {}),
     rating: '',
   };
@@ -125,19 +112,12 @@ const storageProducts: Product[] = [
 const budgetAndPromoProducts: Product[] = [
   { id: 'rx550-promotion', name: 'ASUS Phoenix Radeon RX 550 2GB', brand: 'ASUS', brandIcon: 'asus', category: 'Placas de vídeo', price: 229.90, oldPrice: 279.90, image: productImages['ASUS Phoenix Radeon RX 550 2GB'], badge: 'Oferta', detail: 'Placa de vídeo de entrada para jogos leves, e-sports e vídeo. Promoção por menos de R$ 250.', rating: '' },
   { id: 'monitor-199-promo', name: 'AOC LED 19.5” 75Hz', brand: 'AOC', brandIcon: 'aoc', category: 'Monitores', price: 199.90, oldPrice: 279.90, image: productImages['AOC LED 19.5” 75Hz'], badge: 'Só por 3 dias', detail: 'Monitor compacto para estudo, trabalho e setup gamer de entrada. Oferta especial válida por apenas 3 dias.', rating: '' },
-  { id: 'ram-ddr3-8gb-promo', name: 'Kingston ValueRAM DDR3 8GB 1600MHz', brand: 'Kingston', brandIcon: 'kingstontechnology', category: 'Memória RAM', price: 49.90, oldPrice: 119.90, image: productImages['Kingston ValueRAM DDR3 8GB 1600MHz'], badge: 'Oferta', detail: 'Módulo DDR3 de 8GB para computadores compatíveis com memória DDR3.', rating: '' },
+  { id: 'ram-ddr3-8gb-promo', name: 'Kingston ValueRAM DDR3 8GB 1600MHz', brand: 'Kingston', brandIcon: 'kingstontechnology', category: 'Memória RAM', price: 89.90, oldPrice: 119.90, image: productImages['Kingston ValueRAM DDR3 8GB 1600MHz'], badge: 'Oferta', detail: 'Módulo DDR3 de 8GB para computadores compatíveis com memória DDR3.', rating: '' },
   { id: 'ram-ddr4-8gb-promo', name: 'Kingston Fury Beast DDR4 8GB 3200MHz', brand: 'Kingston', brandIcon: 'kingstontechnology', category: 'Memória RAM', price: 89.90, oldPrice: 129.90, image: productImages['Kingston Fury Beast DDR4 8GB 3200MHz'], badge: 'Oferta', detail: 'Módulo DDR4 de 8GB para computadores compatíveis com memória DDR4.', rating: '' },
   { id: 'mouse-rgb-under-50', name: 'Redragon Centrophorus 2 M601-RGB — Mouse gamer', brand: 'Redragon', brandIcon: 'redragon', category: 'Periféricos', price: 49.90, oldPrice: 69.90, image: productImages['Redragon Centrophorus 2 M601-RGB — Mouse gamer'], badge: 'Até R$ 50', detail: 'Mouse gamer com iluminação RGB, formato ergonômico e conexão USB.', rating: '' },
   { id: 'keyboard-rgb-under-50', name: 'T-Dagger Teclado Gamer RGB ABNT2', brand: 'T-Dagger', brandIcon: 'tdagger', category: 'Periféricos', price: 49.90, oldPrice: 69.90, image: productImages['T-Dagger Teclado Gamer RGB ABNT2'], badge: 'Até R$ 50', detail: 'Teclado gamer ABNT2 com iluminação RGB e conexão USB.', rating: '' },
   { id: 'mousepad-pattern-under-50', name: 'Redragon Flick P016 — Mousepad estampado', brand: 'Redragon', brandIcon: 'redragon', category: 'Periféricos', price: 29.90, oldPrice: 39.90, image: productImages['Redragon Flick P016 — Mousepad estampado'], badge: 'Até R$ 50', detail: 'Mousepad com estampa gamer, superfície de tecido e base antiderrapante.', rating: '' },
   { id: 'headset-under-50', name: 'Redragon Ares H120 — Headset gamer', brand: 'Redragon', brandIcon: 'redragon', category: 'Periféricos', price: 49.90, oldPrice: 69.90, image: productImages['Redragon Ares H120 — Headset gamer'], badge: 'Até R$ 50', detail: 'Headset com microfone integrado para jogos, chamadas e uso diário.', rating: '' },
 ];
-const categoryOrder = categories.map(({ name }) => name);
-export const products: Product[] = [...regularProducts, ...storageProducts, ...budgetAndPromoProducts].sort((a, b) => {
-  const groupOrder = categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
-  if (groupOrder !== 0) return groupOrder;
-  const priceA = Math.min(a.price, ...(a.variants?.map(({ price }) => price) ?? []));
-  const priceB = Math.min(b.price, ...(b.variants?.map(({ price }) => price) ?? []));
-  return priceA - priceB;
-});
+export const products: Product[] = [...regularProducts, ...storageProducts, ...budgetAndPromoProducts];
 export const money = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
