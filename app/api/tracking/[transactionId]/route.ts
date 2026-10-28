@@ -5,7 +5,7 @@ import { getOrderTracking } from '@/lib/db';
 export const runtime = 'nodejs';
 
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ transactionId: string }> }) {
-  if (!process.env.NEON_AUTH_BASE_URL || !process.env.NEON_AUTH_COOKIE_SECRET) return NextResponse.json({ error: 'Conta indisponível.' }, { status: 503 });
+  if (!process.env.NEON_AUTH_COOKIE_SECRET) return NextResponse.json({ error: 'Conta indisponível.' }, { status: 503 });
   let userId: string;
   try {
     const { data } = await getAuth().getSession();

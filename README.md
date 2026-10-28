@@ -10,7 +10,7 @@ Loja de hardware construída com Next.js, Neon Auth e pagamentos Blackcat.
 
 ## Publicar na Vercel
 
-Importe este repositório na Vercel. O framework Next.js é detectado automaticamente. Em **Project → Settings → Environment Variables**, configure `DATABASE_URL`, `NEON_AUTH_BASE_URL`, `NEON_AUTH_COOKIE_SECRET`, `BLACKCAT_API_KEY` e `NEXT_PUBLIC_SITE_URL` com seus valores reais. Faça um novo deploy após salvar as variáveis.
+Importe este repositório na Vercel. O framework Next.js é detectado automaticamente. Em **Project → Settings → Environment Variables**, configure `DATABASE_URL`, `NEON_AUTH_COOKIE_SECRET`, `BLACKCAT_API_KEY` e `NEXT_PUBLIC_SITE_URL` com seus valores reais. A autenticação está vinculada à branch Neon de produção configurada em `lib/auth/server.ts`. Faça um novo deploy após salvar as variáveis.
 
 O segredo Blackcat fica apenas nas rotas de servidor. Produtos e preços são recalculados pelo catálogo do servidor. O checkout exige uma sessão Neon válida, coleta endereço, telefone e CPF, registra o pedido no Postgres e aceita somente PIX. A consulta de status exige que o pedido pertença à conta autenticada. Após a confirmação do pagamento, o cliente pode baixar um comprovante HTML e acompanhar o estado do envio. Esse comprovante não substitui uma NF-e autorizada. O webhook confirma o status consultando a Blackcat e sincroniza o pedido de forma idempotente.
 

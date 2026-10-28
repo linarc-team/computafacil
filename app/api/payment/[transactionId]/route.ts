@@ -3,7 +3,7 @@ import { getAuth } from '@/lib/auth/server';
 import { orderBelongsToUser, updateOrderFromGateway } from '@/lib/db';
 export const runtime = 'nodejs';
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ transactionId: string }> }) {
-  if (!process.env.NEON_AUTH_BASE_URL || !process.env.NEON_AUTH_COOKIE_SECRET) return NextResponse.json({ error: 'Autenticação não configurada.' }, { status: 503 });
+  if (!process.env.NEON_AUTH_COOKIE_SECRET) return NextResponse.json({ error: 'Autenticação não configurada.' }, { status: 503 });
   let userId: string;
   try { const { data: session } = await getAuth().getSession(); if (!session?.user) return NextResponse.json({ error: 'Entre na sua conta para consultar o pedido.' }, { status: 401 }); userId = session.user.id; }
   catch { return NextResponse.json({ error: 'Não foi possível validar sua conta.' }, { status: 401 }); }

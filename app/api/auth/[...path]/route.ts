@@ -4,11 +4,10 @@ import { getAuth } from '@/lib/auth/server';
 type AuthMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 type AuthContext = { params: Promise<{ path: string[] }> };
 async function handle(request: Request, context: AuthContext, method: AuthMethod) {
-  const hasBaseUrl = Boolean(process.env.NEON_AUTH_BASE_URL);
   const hasCookieSecret = Boolean(process.env.NEON_AUTH_COOKIE_SECRET);
   const headers = { 'Cache-Control': 'no-store, max-age=0' };
-  if (!hasBaseUrl || !hasCookieSecret) {
-    console.error('Auth is unavailable: missing server configuration', { hasBaseUrl, hasCookieSecret });
+  if (!hasCookieSecret) {
+    console.error('Auth is unavailable: missing cookie secret', { hasCookieSecret });
     return NextResponse.json({ error: 'O cadastro está temporariamente indisponível. Tente novamente mais tarde.' }, { status: 503, headers });
   }
   try {

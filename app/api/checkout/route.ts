@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     catch { return NextResponse.json({ error: 'Origem da solicitação inválida.' }, { status: 403 }); }
   }
   if (!origin && request.headers.get('sec-fetch-site') === 'cross-site') return NextResponse.json({ error: 'Origem da solicitação inválida.' }, { status: 403 });
-  if (!process.env.NEON_AUTH_BASE_URL || !process.env.NEON_AUTH_COOKIE_SECRET) {
+  if (!process.env.NEON_AUTH_COOKIE_SECRET) {
     return NextResponse.json({ error: 'Para comprar, primeiro entre ou crie uma conta. O cadastro está temporariamente indisponível enquanto a autenticação não é configurada.' }, { status: 503 });
   }
   let userId: string;
