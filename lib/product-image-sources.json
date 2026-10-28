@@ -293,5 +293,15 @@
     "name": "JBL C50HI — Fone com fio e microfone",
     "url": "https://images.kabum.com.br/produtos/fotos/sync_mirakl/128140/xlarge/Fone-De-Ouvido-JBL-C50HI-Intra-Auricular-Com-Microfone-Preto_1769788437.jpg",
     "file": "/products/jbl-c50hi-fone-com-fio-e-microfone.webp"
+  },
+  {
+    "name": "AOC 24B35HM2 23.8” Full HD 100Hz",
+    "url": "https://cdn.sanity.io/images/hf5b3axp/production/5df35e9a4b8bdd6edf94218150e16a116808d989-5280x4920.png?auto=format&fit=max&w=2304",
+    "file": "/products/aoc-24b35hm2-23-8-full-hd-100hz.webp"
+  },
+  {
+    "name": "LG 24MS500-B 23.8” IPS Full HD 100Hz",
+    "url": "https://www.lg.com/content/dam/channel/wcms/de/monitore/fhd-qhd/24ms500-b/gallery/03-zoom/fhd-24ms500-mobilezoom-01.jpg",
+    "file": "/products/lg-24ms500-b-23-8-ips-full-hd-100hz.webp"
   }
 ]

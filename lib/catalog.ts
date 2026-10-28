@@ -13,7 +13,7 @@ export const categories: { name: Category; icon: string; image: string }[] = [
 type ProductGroup = [Category, string[], number[], string, string];
 const records: ProductGroup[] = [
   ['Placas de vídeo', ['PNY GeForce RTX 4060 Verto Dual Fan 8GB','ASUS Dual GeForce RTX 4060 Ti OC 8GB','ASUS Dual GeForce RTX 4070 SUPER EVO 12GB','ASUS Dual Radeon RX 7600 OC 8GB','ASUS Dual Radeon RX 7700 XT OC 12GB','ASUS TUF Gaming GeForce RTX 4070 Ti SUPER 16GB'], [1999,2599,3700,1749,2899,5799], 'photo-1591488320449-011701bb6704', 'Nova geração, desempenho de sobra para jogar e criar.'],
-  ['Monitores', ['AOC 24G4 Gamer 23.8” IPS 180Hz','LG UltraGear 27GR75Q-B 27” QHD 165Hz','Samsung ViewFinity S5 34” UltraWide','ASUS TUF Gaming VG27UQ1A 27” 4K UHD 160Hz','AOC C32G2E Curvo 31.5” 165Hz','Lenovo ThinkVision M15 Portátil 15.6”','LG UltraGear 25GR75FG-B 24.5” 360Hz'], [799,1399,1199,1999,2099,799,1599], 'photo-1527443224154-c4a3942d3acf', 'Imagem fluida, cores vivas e acabamento premium.'],
+  ['Monitores', ['AOC 24G4 Gamer 23.8” IPS 180Hz','LG UltraGear 27GR75Q-B 27” QHD 165Hz','Samsung ViewFinity S5 34” UltraWide','ASUS TUF Gaming VG27UQ1A 27” 4K UHD 160Hz','AOC C32G2E Curvo 31.5” 165Hz','Lenovo ThinkVision M15 Portátil 15.6”','LG UltraGear 25GR75FG-B 24.5” 360Hz','AOC 24B35HM2 23.8” Full HD 100Hz','LG 24MS500-B 23.8” IPS Full HD 100Hz'], [799,1399,1199,1999,2099,799,1599,549,629], 'photo-1527443224154-c4a3942d3acf', 'Imagem fluida, cores vivas e acabamento premium.'],
   ['Processadores', ['AMD Ryzen 5 5600','AMD Ryzen 5 7600','AMD Ryzen 7 5700X','AMD Ryzen 7 7800X3D','AMD Ryzen 9 7900X','AMD Ryzen 9 7950X','Intel Core i5-12400F','Intel Core i5-14600K','Intel Core i7-14700K','Intel Core i9-14900K','Intel Core Ultra 5 245K','Intel Core Ultra 7 265K'], [499,799,729,1899,1799,2699,559,1249,1799,2399,1399,1999], 'photo-1676315487591-7a1d5c02ecae', 'Potência e eficiência para sua próxima montagem.'],
   ['Memória RAM', ['Kingston Fury Beast DDR4 16GB 3200MHz','Kingston Fury Beast DDR4 32GB 3200MHz','Kingston Fury Beast DDR5 32GB 6000MHz','Corsair Vengeance DDR5 32GB 6000MHz','XPG Lancer RGB DDR5 32GB 6000MHz'], [179,299,499,579,599], 'photo-1562976540-1502c2145186', 'Mais velocidade para multitarefas e jogos.'],
   ['Periféricos', ['Logitech M90 — Mouse USB com fio','Multilaser TC193 — Teclado USB ABNT2','Philips TAUE101BK — Fone com fio e microfone','Logitech G Pro X TKL LIGHTSPEED — Teclado','Razer DeathAdder V3 Pro — Mouse','HyperX Cloud III — Headset','SteelSeries QcK Edge XL — Mousepad','Logitech Brio 500 — Webcam','FIFINE AM8 — Microfone USB','8BitDo Ultimate C — Controle sem fio','JBL Quantum Duo — Caixa de som','Logitech Pebble Keys 2 K380s — Teclado','Logitech MX Master 3S — Mouse sem fio','Razer BlackShark V2 Pro — Headset','Elgato Wave:3 — Microfone Gamer','Logitech G Pro X Superlight 2 — Mouse','Redragon K617 Fizz — Teclado 60%','HyperX Pulsefire Mat XL — Mousepad','North Bayou H100 — Suporte articulado','Anker 565 Docking Station — Dock USB-C','Dazz Quartum — Controle USB para PC/PS3/PS4','Dell MS116 — Mouse USB com fio','C3Tech KB-M11BK — Teclado USB ABNT2','Fortrek Speed MPG101 — Mousepad','JBL C50HI — Fone com fio e microfone'], [30,30,39,299,279,399,99,219,319,259,129,169,399,499,499,449,199,119,179,349,69,39,29,25,65], 'photo-1636489910753-1880d26bf218', 'Periféricos de marcas reconhecidas para completar seu setup.'],
@@ -33,7 +33,9 @@ const productImages: Record<string, string> = {
   'ASUS Dual Radeon RX 7700 XT OC 12GB': '/products/asus-dual-radeon-rx-7700-xt-oc-12gb.webp',
   'ASUS TUF Gaming GeForce RTX 4070 Ti SUPER 16GB': '/products/asus-tuf-gaming-geforce-rtx-4070-ti-super-16gb.webp',
   'AOC 24G4 Gamer 23.8” IPS 180Hz': '/products/aoc-24g4-gamer-23-8-ips-180hz.webp',
+  'AOC 24B35HM2 23.8” Full HD 100Hz': '/products/aoc-24b35hm2-23-8-full-hd-100hz.webp',
   'LG UltraGear 27GR75Q-B 27” QHD 165Hz': '/products/lg-ultragear-27gr75q-b-27-qhd-165hz.webp',
+  'LG 24MS500-B 23.8” IPS Full HD 100Hz': '/products/lg-24ms500-b-23-8-ips-full-hd-100hz.webp',
   'Samsung ViewFinity S5 34” UltraWide': '/products/samsung-viewfinity-s5-34-ultrawide.webp',
   'ASUS TUF Gaming VG27UQ1A 27” 4K UHD 160Hz': '/products/asus-tuf-gaming-vg27uq1a-27-4k-uhd-160hz.webp',
   'AOC C32G2E Curvo 31.5” 165Hz': '/products/aoc-c32g2e-curvo-31-5-165hz.webp',
@@ -112,5 +114,12 @@ const storageProducts: Product[] = [
   { id: 'storage-kingston-a400-ssd', name: 'Kingston A400 2.5” SATA SSD (120 GB–960 GB)', brand: 'Kingston', brandIcon: 'kingstontechnology', category: 'Armazenamento', price: 79, oldPrice: 79, image: '/products/kingston-a400-2-5-sata-ssd-120-gb-960-gb.webp', detail: 'SSD SATA de 2,5 polegadas para desktop e notebook.', rating: '', variants: [{ size: '120 GB', price: 79 }, { size: '240 GB', price: 109 }, { size: '480 GB', price: 179 }, { size: '960 GB', price: 299 }] },
   { id: 'storage-wd-sn580-ssd', name: 'WD Blue SN580 M.2 NVMe SSD (250 GB–1 TB)', brand: 'Western Digital', brandIcon: 'western-digital', category: 'Armazenamento', price: 139, oldPrice: 139, image: '/products/wd-blue-sn580-m-2-nvme-ssd-250-gb-1-tb.webp', detail: 'SSD NVMe M.2 2280 PCIe 4.0.', rating: '', variants: [{ size: '250 GB', price: 139 }, { size: '500 GB', price: 219 }, { size: '1 TB', price: 369 }] },
 ];
-export const products: Product[] = [...regularProducts, ...storageProducts];
+const categoryOrder = categories.map(({ name }) => name);
+export const products: Product[] = [...regularProducts, ...storageProducts].sort((a, b) => {
+  const groupOrder = categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
+  if (groupOrder !== 0) return groupOrder;
+  const priceA = Math.min(a.price, ...(a.variants?.map(({ price }) => price) ?? []));
+  const priceB = Math.min(b.price, ...(b.variants?.map(({ price }) => price) ?? []));
+  return priceA - priceB;
+});
 export const money = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
