@@ -22,7 +22,7 @@ export async function GET() {
       demo: false,
     }));
 
-    if (session.user.email.trim().toLowerCase() === 'testando@gmail.com') {
+    if (session.user.email.trim().toLowerCase() === 'testando2@gmail.com') {
       const demoProducts = products.filter((product) => product.category === 'Periféricos');
       const product = demoProducts[Math.floor(Math.random() * demoProducts.length)];
       if (product) orders.unshift({
